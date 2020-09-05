@@ -1,0 +1,24 @@
+{
+  "name": "express-node-boilerplates",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:luishdeza/express-node-boilerplates.git",
+  "author": "Luis Hernandez Ayala <lhernandez@earnest.com>",
+  "license": "MIT",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "NODE_ENV=development node src/index.js",
+    "watch": "nodemon src/index.js"
+  },
+  "dependencies": {
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "dotenv": "^8.2.0",
+    "nodemon": "^2.0.4"
+  },
+  "customDependencies": {
+    "config": "./config",
+    "common": "./src/common"
+  }
+}
