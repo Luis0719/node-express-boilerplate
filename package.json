@@ -18,7 +18,7 @@
     "nodemon": "^2.0.4"
   },
   "customDependencies": {
-    "config": "./config",
+    "config": "./src/config",
     "common": "./src/common"
   }
 }
