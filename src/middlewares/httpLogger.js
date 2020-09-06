@@ -1,5 +1,5 @@
 const morgan = require('morgan');
-const { logger } = require('../utils');
+const { logger } = require('../common/utils');
 
 logger.stream = {
   write: message =>

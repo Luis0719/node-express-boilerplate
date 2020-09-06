@@ -12,8 +12,10 @@
         "plugin:mocha/recommended",
         "prettier"
     ],
+    "parser": "babel-eslint",
     "parserOptions": {
-        "sourceType": "module"
+        "sourceType": "module",
+        "ecmaVersion": 8
     },
     "rules": {
         "no-console": "error",
