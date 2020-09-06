@@ -8,26 +8,40 @@
   "scripts": {
     "preinstall": "node ./scripts/preinstall.js",
     "start": "yarn preinstall && node src/index.js",
-    "dev": "NODE_ENV=development yarn preinstall && node src/index.js",
+    "dev": "cross-env NODE_ENV=development ./bin/www",
     "watch": "yarn preinstall && nodemon src/index.js",
-    "make-pretty": "prettier --write '{src,test}/**/*.js'"
+    "make-pretty": "prettier --write '{src,test}/**/*.js'",
+    "migrate": "npx sequelize-cli db:migrate",
+    "unmigrate": "npx sequelize-cli db:migrate:undo:all",
+    "seed": "npx sequelize-cli db:seed:all",
+    "migrate-seed": "yarn migrate && yarn seed",
+    "unseed": "npx sequelize-cli db:seed:undo:all",
+    "create-migration": "npx sequelize-cli model:generate --name",
+    "create-seed": "npx sequelize-cli seed:generate --name"
   },
   "dependencies": {
+    "bcrypt": "^5.0.0",
     "bluebird": "^3.7.2",
     "dotenv": "^8.2.0",
     "eslint-config-prettier": "^6.11.0",
     "express": "^4.17.1",
     "morgan": "^1.10.0",
+    "pg": "^8.3.3",
+    "pg-hstore": "^2.3.3",
+    "sequelize": "^6.3.5",
     "winston": "^3.3.3"
   },
   "devDependencies": {
+    "babel-eslint": "^10.1.0",
+    "cross-env": "^7.0.2",
     "eslint": "^7.8.1",
     "eslint-plugin-mocha": "^8.0.0",
     "nodemon": "^2.0.4",
-    "prettier": "^2.1.1"
+    "prettier": "^2.1.1",
+    "sequelize-cli": "^6.2.0"
   },
   "customDependencies": {
-    "config": "./src/config",
+    "config": "./config",
     "common": "./src/common"
   },
   "prettier": {
