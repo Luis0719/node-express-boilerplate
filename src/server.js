@@ -1,5 +1,6 @@
 const express = require('express');
 const { server: config } = require('config');
+const boom = require('express-boom');
 const { httpLogger } = require('./middlewares');
 
 const createServer = logger => {
@@ -12,6 +13,9 @@ const createServer = logger => {
       extended: true,
     })
   );
+
+  // Register boom's http errors
+  app.use(boom());
 
   // Register http logger to log all requests
   app.use(httpLogger);
