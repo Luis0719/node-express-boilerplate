@@ -1,3 +1,1 @@
-module.exports = (router) => {
-    console.log("Loanding auth routes");
-}
+module.exports = (router) => {};

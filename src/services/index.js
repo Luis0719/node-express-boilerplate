@@ -1,14 +1,11 @@
-const services = [
-    'auth',
-    'users',
-]
+const services = ['auth', 'users'];
 
 module.exports = (router) => {
-    services.forEach((service) => {
-        require(`./${service}/routes`)(router);
-    });
+  services.forEach((service) => {
+    require(`./${service}/routes`)(router);
+  });
 
-    router.get('/', (req, res, next) => {
-        res.send('Hello world');
-    });
-}
+  router.get('/', (req, res, next) => {
+    res.send('Hello world');
+  });
+};
