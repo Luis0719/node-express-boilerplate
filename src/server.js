@@ -1,22 +1,33 @@
 const express = require('express');
 const { server: config } = require('config');
+const { httpLogger } = require('./middlewares');
 
-const app = express();
+const createServer = logger => {
+  const app = express();
 
-// parse incoming json data
-app.use(express.json());
-app.use(
-  express.urlencoded({
-    extended: true,
-  })
-);
+  // parse incoming json data
+  app.use(express.json());
+  app.use(
+    express.urlencoded({
+      extended: true,
+    })
+  );
 
-// Register Routes
-require('./services')(app);
+  // Register http logger to log all requests
+  app.use(httpLogger);
+  app.logger = logger;
 
-// Create server
-app.listen(config.port);
+  // Register Routes
+  require('./services')(app);
 
-app.on('error', (error) => {
-  throw error;
-});
+  // Create server
+  app.listen(config.port, () => {
+    logger.info(`Server listening on port ${config.port}`);
+  });
+
+  app.on('error', error => {
+    throw error;
+  });
+};
+
+module.exports = createServer;
