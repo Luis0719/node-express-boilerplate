@@ -6,22 +6,33 @@
   "author": "Luis Hernandez Ayala <lhernandez@earnest.com>",
   "license": "MIT",
   "scripts": {
-    "start": "node src/index.js",
-    "dev": "NODE_ENV=development node src/index.js",
-    "watch": "nodemon src/index.js"
+    "preinstall": "node ./scripts/preinstall.js",
+    "start": "yarn preinstall && node src/index.js",
+    "dev": "NODE_ENV=development yarn preinstall && node src/index.js",
+    "watch": "yarn preinstall && nodemon src/index.js",
+    "make-pretty": "prettier --write '{src,test}/**/*.js'"
   },
   "dependencies": {
+    "bluebird": "^3.7.2",
     "dotenv": "^8.2.0",
+    "eslint-config-prettier": "^6.11.0",
     "express": "^4.17.1"
   },
   "devDependencies": {
     "eslint": "^7.8.1",
-    "eslint-config-airbnb-base": "^14.2.0",
-    "eslint-plugin-import": "^2.21.2",
-    "nodemon": "^2.0.4"
+    "eslint-plugin-mocha": "^8.0.0",
+    "nodemon": "^2.0.4",
+    "prettier": "^2.1.1"
   },
   "customDependencies": {
     "config": "./src/config",
     "common": "./src/common"
-  }
+  },
+  "prettier": {
+    "trailingComma": "es5",
+    "singleQuote": true,
+    "bracketSpacing": true,
+    "arrowParens": "avoid"
+  },
+  "build": "localdev"
 }
