@@ -1,7 +1,7 @@
 const express = require('express');
 const { server: config } = require('config');
 const boom = require('express-boom');
-const { httpLogger } = require('./middlewares');
+const { httpLogger, requestLogger } = require('./middlewares');
 
 const createServer = logger => {
   const app = express();
@@ -19,7 +19,9 @@ const createServer = logger => {
 
   // Register http logger to log all requests
   app.use(httpLogger);
-  app.logger = logger;
+
+  // append a logger instance to each request
+  app.use(requestLogger);
 
   // Register Routes
   require('./services')(app);
