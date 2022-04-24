@@ -1,12 +1,19 @@
-function PerEnvConfig(dev, staging, prod) {
+/**
+ * @param  {any} dev
+ * @param  {any} staging
+ * @param  {any} prod
+ *
+ * @return {any} dev|staging|prod
+ */
+function perEnvConfig(dev, staging, prod) {
   switch (process.env.APP_ENV) {
-    case 'development':
+    case "development":
       return dev;
 
-    case 'staging':
+    case "staging":
       return staging;
 
-    case 'production':
+    case "production":
       return prod;
   }
 
@@ -17,7 +24,12 @@ function PerEnvConfig(dev, staging, prod) {
 }
 
 module.exports = {
+  auth: {
+    jwt: {
+      secretOrKey: process.env.JWT_SECRET_KEY,
+    },
+  },
   bcrypt: {
-    salt: PerEnvConfig(1, 10, 10),
-  }
-}
+    salt: perEnvConfig(1, 10, 10),
+  },
+};
