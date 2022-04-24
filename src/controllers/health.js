@@ -13,4 +13,4 @@ function ping(req, res) {
 
 module.exports = {
   ping,
-}
+};
