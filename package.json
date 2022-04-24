@@ -1,55 +1,40 @@
 {
-  "name": "express-node-boilerplates",
-  "version": "1.0.0",
-  "main": "index.js",
-  "repository": "git@github.com:luishdeza/express-node-boilerplates.git",
-  "author": "Luis Hernandez Ayala <lhernandez@earnest.com>",
-  "license": "MIT",
+  "name": "storagenizer",
+  "version": "0.0.0",
+  "private": true,
   "scripts": {
-    "preinstall": "node ./scripts/preinstall.js",
-    "start": "yarn preinstall && node src/index.js",
-    "dev": "cross-env NODE_ENV=development ./bin/www",
-    "watch": "yarn preinstall && nodemon src/index.js",
-    "prettier": "prettier --write '{src,test}/**/*.js'",
-    "migrate": "npx sequelize-cli db:migrate",
-    "unmigrate": "npx sequelize-cli db:migrate:undo:all",
-    "seed": "npx sequelize-cli db:seed:all",
-    "migrate-seed": "yarn migrate && yarn seed",
-    "unseed": "npx sequelize-cli db:seed:undo:all",
-    "create-migration": "npx sequelize-cli model:generate --name",
-    "create-seed": "npx sequelize-cli seed:generate --name"
+    "start": "node ./bin/www",
+    "watch": "nodemon ./bin/www",
+    "eslint": "eslint src/**/* --fix",
+    "eslint-dry": "eslint src/**/*",
+    "prettier": "pretty-quick",
+    "prepare": "husky install",
+    "test": "cross-env NODE_ENV=test jest --config=jest.json",
+    "pretest": ""
   },
   "dependencies": {
-    "bcrypt": "^5.0.0",
-    "bluebird": "^3.7.2",
-    "dotenv": "^8.2.0",
-    "eslint-config-prettier": "^6.11.0",
-    "express": "^4.17.1",
-    "express-boom": "^3.0.0",
-    "morgan": "^1.10.0",
-    "pg": "^8.3.3",
-    "pg-hstore": "^2.3.3",
-    "sequelize": "^6.3.5",
-    "winston": "^3.3.3"
+    "cookie-parser": "~1.4.4",
+    "cors": "^2.8.5",
+    "debug": "~2.6.9",
+    "dotenv": "^16.0.0",
+    "express": "~4.16.1",
+    "express-validator": "^6.14.0",
+    "helmet": "^5.0.2",
+    "http-errors": "~1.6.3",
+    "lodash": "^4.17.21",
+    "morgan": "~1.9.1"
   },
   "devDependencies": {
-    "babel-eslint": "^10.1.0",
-    "cross-env": "^7.0.2",
-    "eslint": "^7.8.1",
-    "eslint-plugin-mocha": "^8.0.0",
-    "nodemon": "^2.0.4",
-    "prettier": "^2.1.1",
-    "sequelize-cli": "^6.2.0"
-  },
-  "customDependencies": {
-    "config": "./config",
-    "common": "./src/common"
-  },
-  "prettier": {
-    "trailingComma": "es5",
-    "singleQuote": true,
-    "bracketSpacing": true,
-    "arrowParens": "avoid"
-  },
-  "build": "localdev"
+    "cross-env": "^7.0.3",
+    "eslint": "^8.14.0",
+    "eslint-config-google": "^0.14.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "husky": "^7.0.4",
+    "jest": "^27.5.1",
+    "lint-staged": "^12.4.0",
+    "nodemon": "^2.0.15",
+    "prettier": "2.6.2",
+    "supertest": "^6.2.2"
+  }
 }

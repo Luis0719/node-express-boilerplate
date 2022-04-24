@@ -1,0 +1,8 @@
+{
+  "verbose": true,
+  "errorOnDeprecated": true,
+  "testEnvironment": "node",
+  "roots": [
+    "test/"
+  ]
+}
