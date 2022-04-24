@@ -3,6 +3,7 @@ const helmet = require("helmet");
 const cors = require("cors");
 const passport = require("./passport");
 const morgan = require("morgan");
+const logging = require("./serverLogging");
 
 /**
  * @param  {Express.App} app
@@ -13,6 +14,7 @@ function register(app) {
   app.use(cors());
   app.use(morgan("dev"));
 
+  logging.register(app);
   passport.register(app);
 }
 
