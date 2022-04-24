@@ -1,4 +1,4 @@
-const { JwtStrategy, ExtractJwt } = require("passport-jwt");
+const { Strategy, ExtractJwt } = require("passport-jwt");
 const config = require("../../../config").auth.jwt;
 
 const opts = {
@@ -6,7 +6,7 @@ const opts = {
   secretOrKey: config.secretOrKey,
 };
 
-const strategy = new JwtStrategy(opts, function verify(payload, done) {
+const strategy = new Strategy(opts, function verify(payload, done) {
   // TODO(): Replace with actual db query
   const user = {
     id: payload.id,

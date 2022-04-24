@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 
+const pkg = require("../package.json");
 /**
  * Load env vars
  */
@@ -10,7 +11,7 @@ require('dotenv').config({ path: envVarsPath });
  * Module dependencies.
  */
 const app = require('../src/app');
-const debug = require('debug')('storagenizer:server');
+const debug = require('debug')(pkg.name + ':server');
 const http = require('http');
 
 /**
@@ -87,5 +88,6 @@ function onListening() {
   const bind = typeof addr === 'string'
     ? 'pipe ' + addr
     : 'port ' + addr.port;
+  console.log("Listening on " + bind);
   debug('Listening on ' + bind);
 }
