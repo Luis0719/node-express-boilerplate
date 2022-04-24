@@ -3,11 +3,11 @@ const express = require("express");
 const router = express.Router();
 
 // List of routes
+const healthRoutes = require("./health");
+healthRoutes.register(router);
+
 const authRoutes = require("./auth");
 authRoutes.register(router);
-
-const miscRoutes = require("./misc");
-miscRoutes.register(router);
 // End of routes
 
 module.exports = router;
