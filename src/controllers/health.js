@@ -5,6 +5,7 @@ const pkg = require("../../package.json");
  * @param  {Express.Response} res
  */
 function ping(req, res) {
+  req.logger.info("HOLA");
   res.send({
     name: pkg.name,
     version: pkg.version,

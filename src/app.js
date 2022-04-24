@@ -1,21 +1,18 @@
 const createError = require("http-errors");
 const express = require("express");
-const cookieParser = require("cookie-parser");
-const logger = require("morgan");
-const helmet = require("helmet");
-const cors = require("cors");
 
+const middlewares = require("./middlewares");
 const routes = require("./routes");
 
 const app = express();
 
-app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
-app.use(helmet());
-app.use(cors());
 
+// Register all middlewares
+middlewares.register(app);
+
+// Load all routes
 app.use("/", routes);
 
 // catch 404 and forward to error handler
