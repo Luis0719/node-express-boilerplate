@@ -3,6 +3,7 @@ version: "3.6"
 services:
   db_dev:
     image: postgres:14.2
+    container_name: db_dev
     environment:
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: admin
@@ -11,3 +12,19 @@ services:
       - ./postgres/pgdata:/var/lib/postgresql/data
     ports:
       - "5432:5432"
+
+  api_dev:
+    container_name: api_dev
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: dev
+    depends_on:
+      - db_dev
+    ports:
+      - "3000:3000"
+    stdin_open: true
+    tty: true
+    volumes:
+      - ./:/usr/src/app
+      - /usr/src/app/node_modules
