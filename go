@@ -9,6 +9,7 @@ function dc_exec {
   $DC run $DEV_IMAGE $@
 }
 
+# Service functions
 function runDb {
   $DC up $DB_IMAGE
 }
@@ -21,35 +22,90 @@ function build {
   $DC build
 }
 
-function npm_exec {
-  dc_exec npm $@
-}
-
-function test {
-  npm_exec run test
-}
-
-function lint {
-  npm_exec run lint
-}
-
-function prettier {
-  npm_exec run prettier
-}
-
 function stop {
   $DC stop
   $DC down
 }
 
 function shell {
-  dc_exec shell
+  dc_exec bash
 }
+# End Service functions
+
+# NPM functions
+function npm_exec {
+  dc_exec npm $@
+}
+
+function npm_run {
+  dc_exec npm run $@
+}
+
+function test {
+  npm_run test
+}
+
+function lint {
+  npm_run lint
+}
+
+function prettier {
+  npm_run prettier
+}
+# End NPM functions
+
+# DB actions
+function npx_run {
+  dc_exec npm $@
+}
+
+function migrate {
+  npm_run migrate
+}
+
+function unmigrate {
+  npm_run unmigrate
+}
+
+function seed {
+  npm_run seed
+}
+
+function unseed {
+  npm_run unseed
+}
+
+function create-migration {
+  npx_run migration:create --name $1
+}
+
+function create-model {
+  npx_run model:create --name $1
+}
+
+function create-seed {
+  npx_run seed:create --name $1
+}
+# End DB actions
 
 case "$1" in
   build) build
   ;;
-  db) runDb
+  db)
+    case "$2" in
+      run) runDb
+      ;;
+      migrate) migrate
+      ;;
+      seed) seed
+      ;;
+      create-migration) create-migration $3
+      ;;
+      create-model) create-model $3
+      ;;
+      create-seed) create-seed $3
+      ;;
+    esac
   ;;
   lint) lint
   ;;
