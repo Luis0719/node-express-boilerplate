@@ -2,7 +2,8 @@
   "verbose": true,
   "errorOnDeprecated": true,
   "testEnvironment": "node",
-  "roots": [
-    "test/"
-  ]
+  "roots": ["test/"],
+  "setupFiles": ["./test/init.js"],
+  "//": "We do not support parallel testing since we use a database. We should reconsider our testing strategy",
+  "maxConcurrency": 1
 }
