@@ -1,4 +1,4 @@
-const controllers = require("../controllers/health");
+const controllers = require("./handlers/health");
 
 /**
  * @param  {express.Router} router

@@ -22,11 +22,7 @@ services:
     depends_on:
       - db_dev
     environment:
-      DB_HOST: db_dev
-      DB_PORT: 5432
-      DB_USERNAME: admin
-      DB_PASSWORD: admin
-      DB_DATABASE: dev
+      APP_ENV: development
     ports:
       - "3000:3000"
     stdin_open: true

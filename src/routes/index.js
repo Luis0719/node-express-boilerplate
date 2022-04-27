@@ -8,6 +8,9 @@ healthRoutes.register(router);
 
 const authRoutes = require("./auth");
 authRoutes.register(router);
+
+const usersRoutes = require("./users");
+usersRoutes.register(router);
 // End of routes
 
 module.exports = router;
