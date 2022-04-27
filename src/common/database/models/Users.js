@@ -1,6 +1,7 @@
+/* eslint-disable new-cap */
 "use strict";
 const { DataTypes } = require("sequelize");
-const { bcrypt } = require("../../utils");
+const crypto = require("../../crypto");
 
 module.exports = (sequelize) => {
   const Users = sequelize.define(
@@ -22,11 +23,11 @@ module.exports = (sequelize) => {
 
   Users.associate = (models) => {};
 
-  Users.prototype.setPassword = async (password) => {
-    this.password = await bcrypt.hash(password);
+  Users.prototype.setPassword = async function (password) {
+    this.password = await crypto.hash(password);
   };
 
-  Users.prototype.getFullName = () => {
+  Users.prototype.getFullName = function () {
     return `${this.firstName} ${this.lastName}`;
   };
 

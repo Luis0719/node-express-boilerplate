@@ -1,12 +1,13 @@
 "use strict";
 const Sequelize = require("sequelize");
 const config = require("./config");
+const requireDirectory = require("require-directory");
 
-let sequelize;
+let connection;
 if (config.connection_url) {
-  sequelize = new Sequelize(config.connection_url, config);
+  connection = new Sequelize(config.connection_url, config);
 } else {
-  sequelize = new Sequelize(
+  connection = new Sequelize(
     config.database,
     config.username,
     config.password,
@@ -14,14 +15,27 @@ if (config.connection_url) {
   );
 }
 
-try {
-  await sequelize.authenticate();
-  console.log("Connection has been established successfully.");
-} catch (error) {
-  console.error("Unable to connect to the database:", error);
+// try {
+//   connection.authenticate();
+//   console.log("Connection has been established successfully.");
+// } catch (error) {
+//   console.error("Unable to connect to the database:", error);
+// }
+
+/**
+ * Runs associate() for each model. Used to define db relationships
+ * @param  {Sequelize.Model.Define} model
+ * @return {Sequelize.Model} initialized model
+ */
+function modelVisitor(model) {
+  if (model.associate) {
+    model.associate(db);
+  }
+
+  return model(connection);
 }
 
 module.exports = {
-  models: require("./models"),
-  connection: sequelize,
+  models: requireDirectory(module, "./models", { visit: modelVisitor }),
+  connection,
 };

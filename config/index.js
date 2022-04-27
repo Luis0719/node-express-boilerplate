@@ -30,6 +30,6 @@ module.exports = {
     },
   },
   bcrypt: {
-    salt: perEnvConfig(1, 10, 10),
+    saltRounds: perEnvConfig(1, 10, 10),
   },
 };

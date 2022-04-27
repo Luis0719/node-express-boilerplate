@@ -1,7 +1,10 @@
-const path = require('path');
+const path = require("path");
+
+const envVarsPath = `config/.env.${process.env.APP_ENV || "development"}`;
+require("dotenv").config({ path: envVarsPath });
 
 module.exports = {
-  'config': path.resolve('src', 'common', 'database', 'config.js'),
-  'seeders-path': path.resolve('src', 'common', 'database', 'seeders'),
-  'migrations-path': path.resolve('src', 'common', 'database', 'migrations'),
-}
+  config: path.resolve("src", "common", "database", "config.js"),
+  "seeders-path": path.resolve("src", "common", "database", "seeders"),
+  "migrations-path": path.resolve("src", "common", "database", "migrations"),
+};
