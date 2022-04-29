@@ -10,29 +10,30 @@ function usersToIdList(users) {
 }
 
 describe("Users Handlers", () => {
+  let users;
+
   beforeAll(async () => {
     await dbUtils.cleanDatabase(Users);
   });
 
+  beforeAll(async function () {
+    // Create all testable users at the beginning. This makes it easier to parallelize all tests.
+    const promises = [
+      factory.User.create({
+        first_name: "test1a",
+        last_name: "last1a",
+        username: "user1",
+      }),
+      factory.User.create({
+        first_name: "test2a",
+        last_name: "last2a",
+        username: "user2",
+      }),
+    ];
+    users = await Promise.all(promises);
+  });
+
   describe("list", () => {
-    let users;
-
-    beforeAll(async function () {
-      const promises = [
-        factory.User.create({
-          first_name: "test1a",
-          last_name: "last1a",
-          username: "list_test1_1",
-        }),
-        factory.User.create({
-          first_name: "test2a",
-          last_name: "last2a",
-          username: "list_test1_2",
-        }),
-      ];
-      users = await Promise.all(promises);
-    });
-
     test("should return list of users", async () => {
       const result = await methods.list({});
       expect(result.length).toBe(users.length);
@@ -68,10 +69,13 @@ describe("Users Handlers", () => {
 
   describe("findById", () => {
     test("should return user by id", async () => {
-      const user = await factory.User.create({ username: "findById_test1_1" });
+      const result = await methods.findById("" + users[0].id);
+      expect(result.id).toBe(users[0].id);
+    });
 
-      const result = await methods.findById("" + user.id);
-      expect(result.id).toBe(user.id);
+    test("should return null if not found", async () => {
+      const result = await methods.findById("-1");
+      expect(result).toBeNull();
     });
   });
 });
