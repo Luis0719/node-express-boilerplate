@@ -7,6 +7,16 @@ describe("Users Endpoints", () => {
     jest.clearAllMocks();
   });
 
+  describe("GET /users", () => {
+    test("should return 200 if ok", async () => {
+      methods.list.mockImplementationOnce(() => Promise.resolve([]));
+
+      const res = await server.get(`/users`);
+      expect(res.status).toEqual(200);
+      expect(methods.list).toHaveBeenCalledWith({});
+    });
+  });
+
   describe("GET /users/:id", () => {
     test("should return 200 with valid user", async () => {
       methods.findById.mockImplementationOnce(() => Promise.resolve({}));

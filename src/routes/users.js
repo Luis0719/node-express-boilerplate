@@ -6,6 +6,8 @@ const { param } = require("express-validator");
  * @param  {Express.App} app
  */
 function register(app) {
+  app.get("/users", handlers.list);
+
   app.get(
     "/users/:id",
     param("id").isNumeric(),

@@ -12,7 +12,10 @@ function register(app) {
   app.use(cookieParser());
   app.use(helmet());
   app.use(cors());
-  app.use(morgan("dev"));
+
+  if (process.env.NODE_ENV !== "test") {
+    app.use(morgan("dev"));
+  }
 
   logging.register(app);
   passport.register(app);

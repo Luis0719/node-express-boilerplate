@@ -6,6 +6,25 @@ const httpErrors = require("http-errors");
  * @param  {Express.Request} req
  * @param  {Express.Response} res
  * @param  {Express.Next} next
+ * @return {Sequelize.Model.User[]} list of users
+ */
+async function list(req, res, next) {
+  const options = req.query;
+  const [err, users] = await to(methods.list(options));
+
+  if (err) {
+    req.logger.error(err);
+    return next(new httpErrors.InternalServerError());
+  }
+
+  return res.send(users);
+}
+
+/**
+ * Given a userId, find a user in the db
+ * @param  {Express.Request} req
+ * @param  {Express.Response} res
+ * @param  {Express.Next} next
  * @return {Sequelize.Model.User|HttpError} user
  */
 async function findById(req, res, next) {
@@ -25,4 +44,5 @@ async function findById(req, res, next) {
 
 module.exports = {
   findById,
+  list,
 };
