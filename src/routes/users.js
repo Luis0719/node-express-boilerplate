@@ -14,6 +14,13 @@ function register(app) {
     validateInput,
     handlers.findById
   );
+
+  app.delete(
+    "/users/:id",
+    param("id").isNumeric(),
+    validateInput,
+    handlers.destroy
+  );
 }
 
 module.exports = {
