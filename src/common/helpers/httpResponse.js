@@ -10,6 +10,7 @@ function ok(res) {
 /**
  * Returns 200 http code with json content
  * @param  {Express.Response} res
+ * @param  {any} data data to return
  * @return {Express.Response}
  */
 function content(res, data) {

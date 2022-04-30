@@ -13,6 +13,7 @@
     "eslint": "eslint src/**/* --fix",
     "eslint-dry": "eslint src/**/*",
     "prettier": "pretty-quick",
+    "prettier:all": "prettier --write .",
     "prepare": "husky install",
     "test": "cross-env NODE_ENV=test jest --config=jest.json",
     "pretest": "cross-env NODE_ENV=test npm run migrate",

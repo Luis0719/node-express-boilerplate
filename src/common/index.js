@@ -1,3 +1,3 @@
 module.exports = {
-  crypt: require('./crypto'),
-}
+  crypt: require("./crypto"),
+};
