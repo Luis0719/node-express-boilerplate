@@ -27,6 +27,86 @@ describe("Users Endpoints", () => {
     // TODO add query filters coverage
   });
 
+  describe("POST /users/register", () => {
+    const kUrl = "/users/register";
+
+    test("should return 200 if ok", async () => {
+      const mockUserOptions = {
+        first_name: "test",
+        last_name: "test",
+        email: "test@test.com",
+        password: "testpass",
+        roles: [],
+      };
+
+      const mockUser = factories.User.build(mockUserOptions);
+
+      methods.register.mockImplementationOnce(() =>
+        Promise.resolve(new Status(Status.OK, mockUser))
+      );
+
+      const res = await server.post(kUrl).send(mockUserOptions);
+
+      expect(res.status).toBe(200);
+      expect(res.body.first_name).toBe(mockUser.first_name);
+      expect(methods.register).toHaveBeenCalledWith(mockUserOptions);
+    });
+
+    test("should propagate errors", async () => {
+      const mockUserOptions = {
+        first_name: "test",
+        last_name: "test",
+        email: "test@test.com",
+        password: "testpass",
+        roles: [],
+      };
+
+      methods.register.mockImplementationOnce(() =>
+        Promise.resolve(new Status(Status.BAD_REQUEST))
+      );
+
+      const res = await server.post(kUrl).send(mockUserOptions);
+
+      expect(res.status).toBe(Status.BAD_REQUEST);
+    });
+
+    test("should allow optional inputs", async () => {
+      const params = {
+        first_name: "test",
+        // last_name: "test", OPTIONAL
+        email: "test@test.com",
+        password: "testpass",
+        roles: [],
+      };
+
+      methods.register.mockImplementationOnce(() =>
+        Promise.resolve(new Status(Status.OK, {}))
+      );
+
+      const res = await server.post(kUrl).send(params);
+
+      expect(res.status).toBe(Status.OK);
+    });
+
+    test("should return BAD_REQUEST with bad paramters", async () => {
+      const invalidParams = {
+        first_name: "a",
+        last_name: "a",
+        email: "not_an_email",
+        password: "a",
+        roles: null,
+      };
+
+      const res = await server.post(kUrl).send(invalidParams);
+
+      expect(res.status).toBe(Status.BAD_REQUEST);
+      for (const error of res.body.errors) {
+        expect(Object.keys(invalidParams)).toContain(error.param);
+        expect(error.msg).toBe("Invalid value");
+      }
+    });
+  });
+
   describe("GET /users/:id", () => {
     test("should return 200 with valid user", async () => {
       const mockUser = factories.User.build();
@@ -37,7 +117,7 @@ describe("Users Endpoints", () => {
       const res = await server.get(`/users/1`);
       expect(res.status).toEqual(200);
       expect(res.body.first_name).toBe(mockUser.first_name);
-      expect(methods.findById).toHaveBeenCalledWith("1");
+      expect(methods.findById).toHaveBeenCalledWith(1);
     });
 
     test("should return 404 if user is not found", async () => {
@@ -47,7 +127,7 @@ describe("Users Endpoints", () => {
 
       const res = await server.get(`/users/-1`);
       expect(res.status).toEqual(404);
-      expect(methods.findById).toHaveBeenCalledWith("-1");
+      expect(methods.findById).toHaveBeenCalledWith(-1);
     });
 
     test("should return 400 if user id is not valid", async () => {
@@ -64,7 +144,7 @@ describe("Users Endpoints", () => {
 
       const res = await server.delete(`/users/1`);
       expect(res.status).toEqual(200);
-      expect(methods.destroy).toHaveBeenCalledWith("1");
+      expect(methods.destroy).toHaveBeenCalledWith(1);
     });
 
     test("should return 400 if user id is not valid", async () => {
@@ -78,7 +158,7 @@ describe("Users Endpoints", () => {
       );
       const res = await server.delete(`/users/1`);
       expect(res.status).toEqual(403);
-      expect(methods.destroy).toHaveBeenCalledWith("1");
+      expect(methods.destroy).toHaveBeenCalledWith(1);
     });
   });
 });

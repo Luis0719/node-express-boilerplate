@@ -28,13 +28,38 @@ function buildListOptions(options) {
 }
 
 /**
- * @param  {Object} options list of options
+ * @param  {Object} options
  * @return {Status}
  */
 async function list(options) {
   const queryOptions = buildListOptions(options);
   const users = await Users.findAll(queryOptions);
   return new Status(Status.OK, users);
+}
+
+/**
+ * @param  {Object} params
+ * @return {Status}
+ */
+async function register(params) {
+  const duplicatedUser = await Users.findOne({
+    where: { [Op.or]: [{ username: params.email }, { email: params.email }] },
+  });
+
+  if (duplicatedUser) {
+    return new Status(
+      Status.BAD_REQUEST,
+      `User with email ${params.email} already exists.`
+    );
+  }
+
+  // In this particular case we want both username and email
+  // to be the same. If we implement other types of logins (like social media login)
+  // username will be different.
+  params.username = params.email;
+  const user = await Users.create(params);
+
+  return new Status(Status.OK, user);
 }
 
 /**
@@ -64,4 +89,5 @@ module.exports = {
   destroy,
   findById,
   list,
+  register,
 };

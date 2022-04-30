@@ -7,7 +7,7 @@ const httpResponse = require("../../common/helpers/httpResponse");
  * @param  {Express.Request} req
  * @param  {Express.Response} res
  * @param  {Express.Next} next
- * @return {Sequelize.Model.User[]} list of users
+ * @return {User[]|HttpError} list of users
  */
 async function list(req, res, next) {
   const options = req.query;
@@ -23,7 +23,28 @@ async function list(req, res, next) {
   }
 
   return httpResponse.representListAs(res, "basicUser", result.data);
-  // return httpResponse.content(res, result.data);
+}
+
+/**
+ * @param  {Express.Request} req
+ * @param  {Express.Response} res
+ * @param  {Express.Next} next
+ * @return {User|HttpError} created user
+ */
+async function register(req, res, next) {
+  const options = req.body;
+  const [err, result] = await to(methods.register(options));
+
+  if (err) {
+    req.logger.error(err);
+    return next(new httpErrors.InternalServerError());
+  }
+
+  if (!result.ok()) {
+    return next(result.getError());
+  }
+
+  return httpResponse.representAs(res, "basicUser", result.data);
 }
 
 /**
@@ -31,7 +52,7 @@ async function list(req, res, next) {
  * @param  {Express.Request} req
  * @param  {Express.Response} res
  * @param  {Express.Next} next
- * @return {Sequelize.Model.User|HttpError} user
+ * @return {User|HttpError} user
  */
 async function findById(req, res, next) {
   const [err, result] = await to(methods.findById(req.params.id));
@@ -46,7 +67,6 @@ async function findById(req, res, next) {
   }
 
   return httpResponse.representAs(res, "profileUser", result.data);
-  // return httpResponse.content(res, result.data);
 }
 
 /**
@@ -55,7 +75,7 @@ async function findById(req, res, next) {
  * @param  {Express.Request} req
  * @param  {Express.Response} res
  * @param  {Express.Next} next
- * @return {Sequelize.Model.User|HttpError} user
+ * @return {User|HttpError} user
  */
 async function destroy(req, res, next) {
   const [err, result] = await to(methods.destroy(req.params.id));
@@ -76,4 +96,5 @@ module.exports = {
   destroy,
   findById,
   list,
+  register,
 };
