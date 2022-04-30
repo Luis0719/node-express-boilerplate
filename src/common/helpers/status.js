@@ -49,8 +49,8 @@ class CanonicalStatus {
    * @return {HttpError}
    */
   getError() {
-    const httpError = CanonicalStatus.errors[this.type];
-    return new httpError(this.data);
+    const HttpError = CanonicalStatus.errors[this.type];
+    return new HttpError(this.data);
   }
 }
 
