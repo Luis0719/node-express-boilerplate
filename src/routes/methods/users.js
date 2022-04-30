@@ -1,3 +1,4 @@
+const Status = require("../../common/helpers/status");
 const { Users } = require("../../common/database").models;
 const { Op } = require("sequelize");
 /**
@@ -43,7 +44,17 @@ function findById(id) {
   return Users.findByPk(id);
 }
 
+/**
+ * @param  {int} id
+ * @return {Promise} promise to destroy user by id
+ */
+async function destroy(id) {
+  await Users.destroy({where:{id,}});
+  return new Status(Status.OK);
+}
+
 module.exports = {
+  destroy,
   findById,
   list,
 };

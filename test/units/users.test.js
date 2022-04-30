@@ -1,3 +1,4 @@
+const Status = require('../../src/common/helpers/status');
 const methods = require("../../src/routes/methods/users");
 const { Users } = require("../../src/common/database").models;
 const { dbUtils, factory } = require("../testCommon/database");
@@ -11,6 +12,7 @@ function usersToIdList(users) {
 
 describe("Users Handlers", () => {
   let users;
+  let userIdToDelete;
 
   beforeAll(async () => {
     await dbUtils.cleanDatabase(Users);
@@ -29,8 +31,15 @@ describe("Users Handlers", () => {
         last_name: "last2a",
         username: "user2",
       }),
+      factory.User.create({
+        first_name: "delete",
+        last_name: "me",
+        username: "delete_me",
+      }),
     ];
     users = await Promise.all(promises);
+
+    userIdToDelete = users[2].id;
   });
 
   describe("list", () => {
@@ -69,13 +78,31 @@ describe("Users Handlers", () => {
 
   describe("findById", () => {
     test("should return user by id", async () => {
-      const result = await methods.findById("" + users[0].id);
+      const result = await methods.findById(users[0].id);
       expect(result.id).toBe(users[0].id);
     });
 
     test("should return null if not found", async () => {
       const result = await methods.findById("-1");
       expect(result).toBeNull();
+    });
+  });
+
+  describe("destroy", () => {
+    test("should return destroy user by id", async () => {
+      const userToDelete = await Users.findOne({where:{id: userIdToDelete}});
+      expect(userToDelete).not.toBeNull();
+
+      const result = await methods.destroy(userIdToDelete);
+      expect(result.ok()).toBe(true);
+
+      const deletedUser = await Users.findOne({where:{id: userIdToDelete}});
+      expect(deletedUser).toBeNull();
+    });
+
+    test("should not fail if user is not found", async () => {
+      const result = await methods.destroy("-1");
+      expect(result.ok()).toBe(true);
     });
   });
 });
