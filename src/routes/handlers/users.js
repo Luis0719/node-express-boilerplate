@@ -1,7 +1,7 @@
 const methods = require("../methods/users");
 const { to } = require("../../common/helpers/asyncUtils");
 const httpErrors = require("http-errors");
-const httpResponse = require('../../common/helpers/httpResponse');
+const httpResponse = require("../../common/helpers/httpResponse");
 
 /**
  * @param  {Express.Request} req
@@ -43,7 +43,6 @@ async function findById(req, res, next) {
   if (!result.ok()) {
     return next(result.getError());
   }
-
 
   return httpResponse.content(res, result.data);
 }

@@ -2,7 +2,7 @@ const httpErrors = require("http-errors");
 
 /*
  * Interface between service errors and http errors.
-*/
+ */
 class CanonicalStatus {
   // TYPES
   static OK = 200;
@@ -17,14 +17,14 @@ class CanonicalStatus {
     401: httpErrors.Unauthorized,
     403: httpErrors.Forbidden,
     404: httpErrors.NotFound,
-  }
+  };
   /**
    * @param  {CanonicalStatus.Type} type
    * @param  {any} data if error, this is usually a message as string
    */
   constructor(type, data) {
     if (type != CanonicalStatus.OK && !CanonicalStatus.errors[type]) {
-      throw Error("Invalid error type " + (type ? type : '' + type));
+      throw Error("Invalid error type " + (type ? type : "" + type));
     }
 
     this.type = type;

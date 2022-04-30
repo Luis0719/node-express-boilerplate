@@ -56,7 +56,7 @@ async function findById(id) {
  * @return {Status}
  */
 async function destroy(id) {
-  await Users.destroy({where:{id,}});
+  await Users.destroy({ where: { id } });
   return new Status(Status.OK);
 }
 

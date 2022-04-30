@@ -1,8 +1,8 @@
-const Status = require('../../src/common/helpers/status');
+const Status = require("../../src/common/helpers/status");
 
 describe("Helpers Status", () => {
   test("OK status", () => {
-    const data = {id:1};
+    const data = { id: 1 };
     const status = new Status(Status.OK, data);
     expect(status.ok()).toBe(true);
     expect(status.getData()).toEqual(data);

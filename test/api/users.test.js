@@ -10,7 +10,9 @@ describe("Users Endpoints", () => {
 
   describe("GET /users", () => {
     test("should return 200 if ok", async () => {
-      methods.list.mockImplementationOnce(() => Promise.resolve(new Status(Status.OK), [{id:'XXXXX'}]));
+      methods.list.mockImplementationOnce(() =>
+        Promise.resolve(new Status(Status.OK), [{ id: "XXXXX" }])
+      );
 
       const res = await server.get(`/users`);
 
@@ -23,7 +25,9 @@ describe("Users Endpoints", () => {
 
   describe("GET /users/:id", () => {
     test("should return 200 with valid user", async () => {
-      methods.findById.mockImplementationOnce(() => Promise.resolve(new Status(Status.OK), {}));
+      methods.findById.mockImplementationOnce(() =>
+        Promise.resolve(new Status(Status.OK), {})
+      );
 
       const res = await server.get(`/users/1`);
       expect(res.status).toEqual(200);
@@ -31,7 +35,9 @@ describe("Users Endpoints", () => {
     });
 
     test("should return 404 if user is not found", async () => {
-      methods.findById.mockImplementationOnce(() => Promise.resolve(new Status(Status.NOT_FOUND)));
+      methods.findById.mockImplementationOnce(() =>
+        Promise.resolve(new Status(Status.NOT_FOUND))
+      );
 
       const res = await server.get(`/users/-1`);
       expect(res.status).toEqual(404);
@@ -46,7 +52,9 @@ describe("Users Endpoints", () => {
 
   describe("DELETE /users/:id", () => {
     test("should return 200 with valid user id", async () => {
-      methods.destroy.mockImplementationOnce(() => Promise.resolve(new Status(Status.OK)));
+      methods.destroy.mockImplementationOnce(() =>
+        Promise.resolve(new Status(Status.OK))
+      );
 
       const res = await server.delete(`/users/1`);
       expect(res.status).toEqual(200);
@@ -59,7 +67,9 @@ describe("Users Endpoints", () => {
     });
 
     test("should expose error", async () => {
-      methods.destroy.mockImplementationOnce(() => Promise.resolve(new Status(Status.FORBIDDEN)));
+      methods.destroy.mockImplementationOnce(() =>
+        Promise.resolve(new Status(Status.FORBIDDEN))
+      );
       const res = await server.delete(`/users/1`);
       expect(res.status).toEqual(403);
       expect(methods.destroy).toHaveBeenCalledWith("1");

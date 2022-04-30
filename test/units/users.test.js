@@ -1,4 +1,4 @@
-const Status = require('../../src/common/helpers/status');
+const Status = require("../../src/common/helpers/status");
 const methods = require("../../src/routes/methods/users");
 const { Users } = require("../../src/common/database").models;
 const { dbUtils, factory } = require("../testCommon/database");
@@ -49,8 +49,8 @@ describe("Users Methods", () => {
       expect(result.getData().length).toBe(users.length);
       expect(usersToIdList(result.data)).toEqual(
         expect.arrayContaining(usersToIdList(users))
-        );
-      });
+      );
+    });
 
     test("should filter by first name", async () => {
       const result = await methods.list({ name: "test1a" });
@@ -97,13 +97,17 @@ describe("Users Methods", () => {
 
   describe("destroy", () => {
     test("should return destroy user by id", async () => {
-      const userToDelete = await Users.findOne({where:{id: userIdToDelete}});
+      const userToDelete = await Users.findOne({
+        where: { id: userIdToDelete },
+      });
       expect(userToDelete).not.toBeNull();
 
       const result = await methods.destroy(userIdToDelete);
       expect(result.ok()).toBe(true);
 
-      const deletedUser = await Users.findOne({where:{id: userIdToDelete}});
+      const deletedUser = await Users.findOne({
+        where: { id: userIdToDelete },
+      });
       expect(deletedUser).toBeNull();
     });
 
