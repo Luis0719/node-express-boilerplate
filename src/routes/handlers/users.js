@@ -1,6 +1,6 @@
 const methods = require("../methods/users");
-const { to } = require("../../common/helpers/asyncUtils");
 const httpErrors = require("http-errors");
+const { to } = require("../../common/helpers/asyncUtils");
 const httpResponse = require("../../common/helpers/httpResponse");
 
 /**
@@ -22,7 +22,8 @@ async function list(req, res, next) {
     return next(result.getError());
   }
 
-  return httpResponse.content(res, result.data);
+  return httpResponse.representListAs(res, "basicUser", result.data);
+  // return httpResponse.content(res, result.data);
 }
 
 /**
@@ -44,7 +45,8 @@ async function findById(req, res, next) {
     return next(result.getError());
   }
 
-  return httpResponse.content(res, result.data);
+  return httpResponse.representAs(res, "profileUser", result.data);
+  // return httpResponse.content(res, result.data);
 }
 
 /**

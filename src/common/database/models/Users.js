@@ -15,6 +15,17 @@ module.exports = (sequelize) => {
       email: DataTypes.STRING,
       phone: DataTypes.STRING,
       roles: DataTypes.ARRAY(DataTypes.STRING),
+
+      // Virtuals
+      full_name: {
+        type: DataTypes.VIRTUAL,
+        get() {
+          return `${this.first_name} ${this.last_name}`;
+        },
+        set(value) {
+          throw new Error("Do not try to set the `fullName` value!");
+        },
+      },
     },
     {
       tableName: "users",
@@ -25,10 +36,6 @@ module.exports = (sequelize) => {
 
   Users.prototype.setPassword = async function (password) {
     this.password = await crypto.hash(password);
-  };
-
-  Users.prototype.getFullName = function () {
-    return `${this.firstName} ${this.lastName}`;
   };
 
   return Users;

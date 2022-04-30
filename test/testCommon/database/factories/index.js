@@ -18,11 +18,12 @@ class Factory {
     this.defaultAttrs = defaultAttrs;
     this.hooks = hooks;
   }
+
   /**
-   * @param  {Object} attrs
+   * @param  {Object} attrs={}
    * @return {Sequelize.Model} created model
    */
-  async create(attrs) {
+  async create(attrs = {}) {
     attrs = Object.assign({}, this.defaultAttrs, attrs);
     const model = this.Model.build(attrs);
 
@@ -39,6 +40,16 @@ class Factory {
     if (postSave) await postSave(model);
 
     return model;
+  }
+
+  /**
+   * Build model without saving it
+   * @param  {Object} attrs={}
+   * @return {Sequelize.Model} built model
+   */
+  build(attrs = {}) {
+    attrs = Object.assign({}, this.defaultAttrs, attrs);
+    return this.Model.build(attrs);
   }
 }
 

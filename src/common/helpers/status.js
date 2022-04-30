@@ -1,6 +1,6 @@
 const httpErrors = require("http-errors");
 
-/*
+/**
  * Interface between service errors and http errors.
  */
 class CanonicalStatus {
@@ -31,14 +31,23 @@ class CanonicalStatus {
     this.data = data;
   }
 
+  /**
+   * @return {bool}
+   */
   ok() {
     return this.type === CanonicalStatus.OK;
   }
 
+  /**
+   * @return {Any}
+   */
   getData() {
     return this.data;
   }
 
+  /**
+   * @return {HttpError}
+   */
   getError() {
     const httpError = CanonicalStatus.errors[this.type];
     return new httpError(this.data);

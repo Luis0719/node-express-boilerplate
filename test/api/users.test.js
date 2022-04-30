@@ -1,6 +1,7 @@
 const Status = require("../../src/common/helpers/status");
 const server = require("../testCommon/testServer").getTestServer();
 const methods = require("../../src/routes/methods/users");
+const factories = require("../testCommon/database/factories");
 jest.mock("../../src/routes/methods/users");
 
 describe("Users Endpoints", () => {
@@ -10,13 +11,16 @@ describe("Users Endpoints", () => {
 
   describe("GET /users", () => {
     test("should return 200 if ok", async () => {
+      const mockUser = factories.User.build();
       methods.list.mockImplementationOnce(() =>
-        Promise.resolve(new Status(Status.OK), [{ id: "XXXXX" }])
+        Promise.resolve(new Status(Status.OK, [mockUser]))
       );
 
       const res = await server.get(`/users`);
 
       expect(res.status).toBe(200);
+      expect(res.body.length).toBe(1);
+      expect(res.body[0].first_name).toBe(mockUser.first_name);
       expect(methods.list).toHaveBeenCalledWith({});
     });
 
@@ -25,12 +29,14 @@ describe("Users Endpoints", () => {
 
   describe("GET /users/:id", () => {
     test("should return 200 with valid user", async () => {
+      const mockUser = factories.User.build();
       methods.findById.mockImplementationOnce(() =>
-        Promise.resolve(new Status(Status.OK), {})
+        Promise.resolve(new Status(Status.OK, mockUser))
       );
 
       const res = await server.get(`/users/1`);
       expect(res.status).toEqual(200);
+      expect(res.body.first_name).toBe(mockUser.first_name);
       expect(methods.findById).toHaveBeenCalledWith("1");
     });
 
