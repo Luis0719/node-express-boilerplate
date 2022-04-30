@@ -11,14 +11,18 @@ const httpResponse = require('../../common/helpers/httpResponse');
  */
 async function list(req, res, next) {
   const options = req.query;
-  const [err, users] = await to(methods.list(options));
+  const [err, result] = await to(methods.list(options));
 
   if (err) {
     req.logger.error(err);
     return next(new httpErrors.InternalServerError());
   }
 
-  return res.send(users);
+  if (!result.ok()) {
+    return next(result.getError());
+  }
+
+  return httpResponse.content(res, result.data);
 }
 
 /**
@@ -29,18 +33,19 @@ async function list(req, res, next) {
  * @return {Sequelize.Model.User|HttpError} user
  */
 async function findById(req, res, next) {
-  const [err, user] = await to(methods.findById(req.params.id));
+  const [err, result] = await to(methods.findById(req.params.id));
 
   if (err) {
     req.logger.error(err);
     return next(new httpErrors.InternalServerError());
   }
 
-  if (!user) {
-    return next(new httpErrors.NotFound());
+  if (!result.ok()) {
+    return next(result.getError());
   }
 
-  return res.send(user);
+
+  return httpResponse.content(res, result.data);
 }
 
 /**

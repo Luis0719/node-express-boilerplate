@@ -29,24 +29,31 @@ function buildListOptions(options) {
 
 /**
  * @param  {Object} options list of options
- * @return {Promise} promise to fetch list of users
+ * @return {Status}
  */
-function list(options) {
+async function list(options) {
   const queryOptions = buildListOptions(options);
-  return Users.findAll(queryOptions);
+  const users = await Users.findAll(queryOptions);
+  return new Status(Status.OK, users);
 }
 
 /**
  * @param  {int} id
- * @return {Promise} promise to fetch user by id
+ * @return {Status}
  */
-function findById(id) {
-  return Users.findByPk(id);
+async function findById(id) {
+  const user = await Users.findByPk(id);
+
+  if (!user) {
+    return new Status(Status.NOT_FOUND);
+  }
+
+  return new Status(Status.OK, user);
 }
 
 /**
  * @param  {int} id
- * @return {Promise} promise to destroy user by id
+ * @return {Status}
  */
 async function destroy(id) {
   await Users.destroy({where:{id,}});

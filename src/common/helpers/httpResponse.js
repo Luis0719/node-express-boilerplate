@@ -1,5 +1,9 @@
 function ok(res) {
-  return res.send();
+  return res.end();
+}
+
+function content(res, data) {
+  return res.json(data);
 }
 
 function noContent(res) {
@@ -7,6 +11,7 @@ function noContent(res) {
 }
 
 module.exports = {
+  content,
   noContent,
   ok,
 }

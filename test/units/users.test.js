@@ -10,7 +10,7 @@ function usersToIdList(users) {
   return users.map((x) => x.id);
 }
 
-describe("Users Handlers", () => {
+describe("Users Methods", () => {
   let users;
   let userIdToDelete;
 
@@ -45,46 +45,53 @@ describe("Users Handlers", () => {
   describe("list", () => {
     test("should return list of users", async () => {
       const result = await methods.list({});
-      expect(result.length).toBe(users.length);
-      expect(usersToIdList(result)).toEqual(
+      expect(result.ok()).toBe(true);
+      expect(result.getData().length).toBe(users.length);
+      expect(usersToIdList(result.data)).toEqual(
         expect.arrayContaining(usersToIdList(users))
-      );
-    });
+        );
+      });
 
     test("should filter by first name", async () => {
       const result = await methods.list({ name: "test1a" });
-      expect(result.length).toBe(1);
-      expect(result[0].id).toBe(users[0].id);
+      expect(result.ok()).toBe(true);
+      expect(result.data.length).toBe(1);
+      expect(result.data[0].id).toBe(users[0].id);
     });
 
     test("should filter by first name partial", async () => {
       const result = await methods.list({ name: "est1" });
-      expect(result.length).toBe(1);
-      expect(result[0].id).toBe(users[0].id);
+      expect(result.ok()).toBe(true);
+      expect(result.data.length).toBe(1);
+      expect(result.data[0].id).toBe(users[0].id);
     });
 
     test("should filter by last name", async () => {
       const result = await methods.list({ name: "last1a" });
-      expect(result.length).toBe(1);
-      expect(result[0].id).toBe(users[0].id);
+      expect(result.ok()).toBe(true);
+      expect(result.data.length).toBe(1);
+      expect(result.data[0].id).toBe(users[0].id);
     });
 
     test("should filter by last name partial", async () => {
       const result = await methods.list({ name: "ast1" });
-      expect(result.length).toBe(1);
-      expect(result[0].id).toBe(users[0].id);
+      expect(result.ok()).toBe(true);
+      expect(result.data.length).toBe(1);
+      expect(result.data[0].id).toBe(users[0].id);
     });
   });
 
   describe("findById", () => {
     test("should return user by id", async () => {
       const result = await methods.findById(users[0].id);
-      expect(result.id).toBe(users[0].id);
+      expect(result.ok()).toBe(true);
+      expect(result.data.id).toBe(users[0].id);
     });
 
-    test("should return null if not found", async () => {
+    test("should return NOT_FOUND status if user is not found", async () => {
       const result = await methods.findById("-1");
-      expect(result).toBeNull();
+      expect(result.ok()).toBe(false);
+      expect(result.getError().statusCode).toBe(Status.NOT_FOUND);
     });
   });
 
