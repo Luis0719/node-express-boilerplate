@@ -38,5 +38,14 @@ module.exports = (sequelize) => {
     this.password = await crypto.hash(password);
   };
 
+  Users.prototype.passwordMatch = function (password) {
+    return crypto.compare(password, this.password);
+  };
+
+  // Method 3 via the direct method
+  Users.beforeCreate(async (user, options) => {
+    await user.setPassword(user.password);
+  });
+
   return Users;
 };
