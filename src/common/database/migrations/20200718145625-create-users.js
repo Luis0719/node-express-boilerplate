@@ -36,7 +36,7 @@ module.exports = {
         type: Sequelize.STRING(15),
       },
       roles: {
-        type: Sequelize.ARRAY(Sequelize.STRING(20)),
+        type: Sequelize.ARRAY(Sequelize.INTEGER),
         defaultValue: [],
       },
       created_at: {

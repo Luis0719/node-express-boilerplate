@@ -5,7 +5,7 @@ module.exports = (sequelize) => {
   const RoleActions = sequelize.define(
     "RoleActions",
     {
-      role: DataTypes.STRING,
+      role_id: DataTypes.STRING,
       action_id: DataTypes.INTEGER,
     },
     {
@@ -14,12 +14,8 @@ module.exports = (sequelize) => {
   );
 
   RoleActions.associate = (models) => {
-    RoleActions.belongsTo(models.Roles, {
-      sourceKey: "name",
-      foreignKey: "role",
-      foreignKeyConstraint: true,
-    });
-    RoleActions.belongsTo(models.Actions, { foreignKeyConstraint: true });
+    RoleActions.belongsTo(models.Roles);
+    RoleActions.belongsTo(models.Actions);
   };
 
   return RoleActions;

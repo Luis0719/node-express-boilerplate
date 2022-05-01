@@ -11,12 +11,15 @@ function cleanDatabase(model) {
     return model.destroy({
       truncate: true,
       force: true,
+      cascade: true,
     });
   }
 
   const promises = Object.entries(models).map((model) =>
     model.destroy({
       truncate: true,
+      force: true,
+      cascade: true,
     })
   );
   return promises.all();

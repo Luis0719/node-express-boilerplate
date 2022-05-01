@@ -28,14 +28,18 @@ if (config.connection_url) {
  * @return {Sequelize.Model} initialized model
  */
 function modelVisitor(model) {
-  if (model.associate) {
-    model.associate(db);
-  }
-
   return model(connection);
 }
 
+const models = requireDirectory(module, "./models", { visit: modelVisitor });
+
+for (const [, model] of Object.entries(models)) {
+  if (model.associate) {
+    model.associate(models);
+  }
+}
+
 module.exports = {
-  models: requireDirectory(module, "./models", { visit: modelVisitor }),
+  models,
   connection,
 };

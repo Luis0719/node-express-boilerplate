@@ -14,6 +14,10 @@ module.exports = {
         unique: true,
         allowNull: false,
       },
+      is_admin: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: false,
+      },
       created_at: {
         type: Sequelize.DATE,
       },

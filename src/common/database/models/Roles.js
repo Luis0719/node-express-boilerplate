@@ -6,6 +6,10 @@ module.exports = (sequelize) => {
     "Roles",
     {
       name: DataTypes.STRING,
+      is_admin: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+      },
     },
     {
       tableName: "roles",
@@ -13,10 +17,7 @@ module.exports = (sequelize) => {
   );
 
   Roles.associate = (models) => {
-    Roles.hasMany(models.RoleActions, {
-      foreignKey: "role",
-      sourceKey: "name",
-    });
+    Roles.hasMany(models.RoleActions, { onDelete: "CASCADE" });
   };
 
   return Roles;

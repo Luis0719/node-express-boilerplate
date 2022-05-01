@@ -48,7 +48,7 @@ module.exports = {
       }
     );
 
-    await queryInterface.addColumn(tableName, "group_id", {
+    await queryInterface.addColumn(tableName, "action_group_id", {
       type: Sequelize.INTEGER,
       references: {
         model: "action_groups",

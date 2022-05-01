@@ -9,6 +9,9 @@ healthRoutes.register(router);
 const authRoutes = require("./auth");
 authRoutes.register(router);
 
+const rolesRoutes = require("./roles");
+rolesRoutes.register(router);
+
 const usersRoutes = require("./users");
 usersRoutes.register(router);
 // End of routes

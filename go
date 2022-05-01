@@ -97,7 +97,11 @@ case "$1" in
       ;;
       migrate) migrate
       ;;
+      unmigrate) unmigrate
+      ;;
       seed) seed
+      ;;
+      unseed) unseed
       ;;
       create-migration) create-migration $3
       ;;

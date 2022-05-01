@@ -22,13 +22,12 @@ module.exports = {
       },
     });
 
-    await queryInterface.addColumn(tableName, "role", {
-      type: Sequelize.STRING(20),
+    await queryInterface.addColumn(tableName, "role_id", {
+      type: Sequelize.INTEGER,
       references: {
         model: "roles",
-        key: "name",
+        key: "id",
       },
-      onUpdate: "CASCADE",
       onDelete: "CASCADE",
     });
 
