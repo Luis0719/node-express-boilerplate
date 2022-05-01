@@ -9,7 +9,7 @@ module.exports = (sequelize) => {
       method: DataTypes.STRING,
       name: DataTypes.STRING,
       description: DataTypes.STRING,
-      group_id: DataTypes.INTEGER,
+      action_group_id: DataTypes.INTEGER,
     },
     {
       tableName: "actions",
@@ -18,7 +18,7 @@ module.exports = (sequelize) => {
 
   Actions.associate = (models) => {
     Actions.belongsTo(models.ActionGroups);
-    Actions.hasMany(models.RoleActions);
+    Actions.hasMany(models.RoleActions, { onDelete: "CASCADE" });
   };
 
   return Actions;
