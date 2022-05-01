@@ -1,7 +1,7 @@
 const Status = require("../../common/helpers/status");
 const { Users } = require("../../common/database").models;
 const { Op } = require("sequelize");
-const crypto = require("../../common/crypto");
+
 /**
  * @param  {Object} options
  * @return {Object} query options
