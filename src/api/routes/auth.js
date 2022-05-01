@@ -1,4 +1,4 @@
-const controller = require("./handlers/auth");
+const controller = require("../handlers/auth");
 const passport = require("passport");
 
 /**

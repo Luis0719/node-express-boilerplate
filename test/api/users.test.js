@@ -1,8 +1,8 @@
 const Status = require("../../src/common/helpers/status");
 const server = require("../testCommon/testServer").getTestServer();
-const methods = require("../../src/routes/methods/users");
+const methods = require("../../src/api/methods/users");
 const factories = require("../testCommon/database/factories");
-jest.mock("../../src/routes/methods/users");
+jest.mock("../../src/api/methods/users");
 
 describe("Users Endpoints", () => {
   afterAll(() => {

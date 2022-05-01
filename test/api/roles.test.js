@@ -1,9 +1,9 @@
 const Status = require("../../src/common/helpers/status");
 const server = require("../testCommon/testServer").getTestServer();
-const methods = require("../../src/routes/methods/roles");
+const methods = require("../../src/api/methods/roles");
 const factories = require("../testCommon/database/factories");
 const testUtils = require("../testCommon/utils");
-jest.mock("../../src/routes/methods/roles");
+jest.mock("../../src/api/methods/roles");
 
 describe("Roles Endpoints", () => {
   afterAll(() => {

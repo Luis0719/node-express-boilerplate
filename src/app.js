@@ -2,7 +2,7 @@ const createError = require("http-errors");
 const express = require("express");
 
 const middlewares = require("./middlewares");
-const routes = require("./routes");
+const routes = require("./api/routes");
 
 const app = express();
 

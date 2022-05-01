@@ -1,5 +1,5 @@
 const Status = require("../../src/common/helpers/status");
-const methods = require("../../src/routes/methods/roles");
+const methods = require("../../src/api/methods/roles");
 const { Roles, Actions, RoleActions } =
   require("../../src/common/database").models;
 const { dbUtils, factory, prefabs } = require("../testCommon/database");

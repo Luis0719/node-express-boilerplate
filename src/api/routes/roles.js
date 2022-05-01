@@ -1,6 +1,6 @@
-const { requestTo } = require("../common/helpers/asyncUtils");
-const handlers = require("./handlers/roles");
-const validateInput = require("../middlewares/validateInput");
+const { requestTo } = require("../../common/helpers/asyncUtils");
+const handlers = require("../handlers/roles");
+const validateInput = require("../../middlewares/validateInput");
 const { body, query } = require("express-validator");
 
 /**
