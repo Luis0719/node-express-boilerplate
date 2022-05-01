@@ -88,7 +88,7 @@ describe("Users Endpoints", () => {
       expect(res.status).toBe(Status.OK);
     });
 
-    test("should return BAD_REQUEST with bad paramters", async () => {
+    test("should return BAD_REQUEST with bad parameters", async () => {
       const invalidParams = {
         first_name: "a",
         last_name: "a",
@@ -133,6 +133,56 @@ describe("Users Endpoints", () => {
     test("should return 400 if user id is not valid", async () => {
       const res = await server.get(`/users/INVALID_ID`);
       expect(res.status).toEqual(400);
+    });
+  });
+
+  describe("PATCH /users/set-password", () => {
+    const kUrl = "/users/set-password";
+    test("should return 200 with happy path", async () => {
+      const params = {
+        oldPassword: "oldpassword",
+        newPassword: "newPassword",
+      };
+
+      methods.setPassword.mockImplementationOnce(() =>
+        Promise.resolve(new Status(Status.OK))
+      );
+
+      const res = await server.patch(kUrl).send(params);
+      expect(res.status).toEqual(Status.OK);
+      expect(methods.setPassword).toHaveBeenCalledWith(
+        1,
+        params.oldPassword,
+        params.newPassword
+      );
+    });
+
+    test("should propagate errors", async () => {
+      const params = {
+        oldPassword: "oldpassword",
+        newPassword: "newPassword",
+      };
+
+      methods.setPassword.mockImplementationOnce(() =>
+        Promise.resolve(new Status(Status.FORBIDDEN))
+      );
+      const res = await server.patch(kUrl).send(params);
+      expect(res.status).toEqual(403);
+    });
+
+    test("should return BAD_REQUEST with bad parameters", async () => {
+      const invalidParams = {
+        oldPassword: "a",
+        newPassword: "a",
+      };
+
+      const res = await server.patch(kUrl).send(invalidParams);
+
+      expect(res.status).toBe(Status.BAD_REQUEST);
+      for (const error of res.body.errors) {
+        expect(Object.keys(invalidParams)).toContain(error.param);
+        expect(error.msg).toBe("Invalid value");
+      }
     });
   });
 

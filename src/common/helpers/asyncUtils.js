@@ -23,7 +23,8 @@ function requestTo(handler) {
       const result = await handler(req, res, next);
       return result;
     } catch (err) {
-      req.logger.error(err);
+      console.log(err);
+      req.logger.error(err, err.stack);
       return next(err);
     }
   };
