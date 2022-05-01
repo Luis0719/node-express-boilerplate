@@ -2,11 +2,69 @@ const Status = require("../../src/common/helpers/status");
 const server = require("../testCommon/testServer").getTestServer();
 const methods = require("../../src/routes/methods/roles");
 const factories = require("../testCommon/database/factories");
+const testUtils = require("../testCommon/utils");
 jest.mock("../../src/routes/methods/roles");
 
 describe("Roles Endpoints", () => {
   afterAll(() => {
     jest.clearAllMocks();
+  });
+
+  describe("GET /roles", () => {
+    const kUrl = "/roles";
+
+    test("should return OK if ok", async () => {
+      methods.list.mockImplementationOnce(() =>
+        Promise.resolve(new Status(Status.OK, []))
+      );
+
+      const res = await server.get(kUrl);
+
+      expect(res.status).toBe(200);
+      expect(methods.list).toHaveBeenCalledWith({});
+    });
+
+    test("should return OK with query params", async () => {
+      const params = {
+        name: "test",
+      };
+
+      methods.list.mockImplementationOnce(() =>
+        Promise.resolve(new Status(Status.OK, []))
+      );
+
+      const res = await server.get(testUtils.urlWithQueryParams(kUrl, params));
+
+      expect(res.status).toBe(200);
+      expect(methods.list).toHaveBeenCalledWith(params);
+    });
+
+    test("should propagate errors", async () => {
+      methods.list.mockImplementationOnce(() =>
+        Promise.resolve(new Status(Status.OK, []))
+      );
+
+      const res = await server.get(kUrl);
+
+      expect(res.status).toBe(200);
+      expect(methods.list).toHaveBeenCalledWith({});
+    });
+
+    test("should return BAD_REQUEST with bad parameters", async () => {
+      const invalidParams = {
+        name: "",
+      };
+
+      const res = await server.get(
+        testUtils.urlWithQueryParams(kUrl, invalidParams)
+      );
+
+      expect(res.status).toBe(Status.BAD_REQUEST);
+      for (const error of res.body.errors) {
+        expect(Object.keys(invalidParams)).toContain(error.param);
+        expect(error.msg).toBe("Invalid value");
+      }
+    });
   });
 
   describe("POST /roles/store", () => {
