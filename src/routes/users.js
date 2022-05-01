@@ -27,6 +27,22 @@ function register(app) {
     requestTo(handlers.findById)
   );
 
+  app.patch(
+    "/users/set-password",
+    (req, res, next) => {
+      // TESTONLY
+      req.user = {
+        id: 1,
+      };
+
+      next();
+    }, // TODO Add authentication
+    body("oldPassword").isLength({ min: 8, max: 30 }),
+    body("newPassword").isLength({ min: 8, max: 30 }),
+    validateInput,
+    requestTo(handlers.setPassword)
+  );
+
   app.delete(
     "/users/:id",
     param("id").isNumeric().toInt(),

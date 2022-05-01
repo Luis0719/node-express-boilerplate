@@ -1,6 +1,7 @@
 const Status = require("../../common/helpers/status");
 const { Users } = require("../../common/database").models;
 const { Op } = require("sequelize");
+const crypto = require("../../common/crypto");
 /**
  * @param  {Object} options
  * @return {Object} query options
@@ -78,6 +79,32 @@ async function findById(id) {
 
 /**
  * @param  {int} id
+ * @param  {String} oldPassword
+ * @param  {String} newPassword
+ * @return {Status}
+ */
+async function setPassword(id, oldPassword, newPassword) {
+  const user = await Users.findByPk(id, {
+    // attributes: ["id", "password"],
+  });
+
+  if (!user) {
+    return new Status(Status.NOT_FOUND);
+  }
+
+  const passwordMatch = await user.passwordMatch(oldPassword);
+  if (!passwordMatch) {
+    return new Status(Status.BAD_REQUEST, "Old password does not match");
+  }
+
+  await user.setPassword(newPassword);
+  await user.save();
+
+  return new Status(Status.OK);
+}
+
+/**
+ * @param  {int} id
  * @return {Status}
  */
 async function destroy(id) {
@@ -90,4 +117,5 @@ module.exports = {
   findById,
   list,
   register,
+  setPassword,
 };

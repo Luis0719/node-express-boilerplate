@@ -75,6 +75,35 @@ async function findById(req, res, next) {
  * @param  {Express.Request} req
  * @param  {Express.Response} res
  * @param  {Express.Next} next
+ * @return {_|HttpError} user
+ */
+async function setPassword(req, res, next) {
+  const id = req.user.id;
+  const oldPassword = req.body.oldPassword;
+  const newPassword = req.body.newPassword;
+
+  const [err, result] = await to(
+    methods.setPassword(id, oldPassword, newPassword)
+  );
+
+  if (err) {
+    req.logger.error(err);
+    return next(new httpErrors.InternalServerError());
+  }
+
+  if (!result.ok()) {
+    return next(result.getError());
+  }
+
+  return httpResponse.ok(res);
+}
+
+/**
+ * Delete user with given id.
+ * If database config is paranoid, then user will be soft deleted
+ * @param  {Express.Request} req
+ * @param  {Express.Response} res
+ * @param  {Express.Next} next
  * @return {User|HttpError} user
  */
 async function destroy(req, res, next) {
@@ -97,4 +126,5 @@ module.exports = {
   findById,
   list,
   register,
+  setPassword,
 };

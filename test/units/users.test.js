@@ -13,13 +13,13 @@ function usersToIdList(users) {
 
 describe("Users Methods", () => {
   let users;
-  let userIdToDelete;
-
-  beforeAll(async () => {
-    await dbUtils.cleanDatabase(Users);
-  });
+  let userToSetPassword;
+  const passwordToChange = "oldPassword";
+  let userToDelete;
 
   beforeAll(async function () {
+    await dbUtils.cleanDatabase(Users);
+
     // Create all testable users at the beginning. This makes it easier to parallelize all tests.
     const promises = [
       factory.User.create({
@@ -35,6 +35,13 @@ describe("Users Methods", () => {
         username: "user2@test.com",
       }),
       factory.User.create({
+        first_name: "passwordreset",
+        last_name: "me",
+        email: "passwordreset@test.com",
+        username: "passwordreset@test.com",
+        password: passwordToChange,
+      }),
+      factory.User.create({
         first_name: "delete",
         last_name: "me",
         email: "delete_me@test.com",
@@ -43,7 +50,8 @@ describe("Users Methods", () => {
     ];
     users = await Promise.all(promises);
 
-    userIdToDelete = users[2].id;
+    userToSetPassword = users[2];
+    userToDelete = users[3];
   });
 
   describe("list", () => {
@@ -133,24 +141,58 @@ describe("Users Methods", () => {
     });
   });
 
+  describe("setPassword", () => {
+    test("should success happy path", async () => {
+      const newPassword = "newpassword";
+
+      const result = await methods.setPassword(
+        userToSetPassword.id,
+        passwordToChange,
+        newPassword
+      );
+      expect(result.ok()).toBe(true);
+
+      await userToSetPassword.reload();
+
+      const passwordMatch = await userToSetPassword.passwordMatch(newPassword);
+      expect(passwordMatch).toBe(true);
+    });
+
+    test("should return NOT_FOUND if user does not exists", async () => {
+      const result = await methods.setPassword(-1, "", "");
+      expect(result.ok()).toBe(false);
+      expect(result.getError().statusCode).toBe(Status.NOT_FOUND);
+    });
+
+    test("should return BAD_REQUEST if old password does not match", async () => {
+      const result = await methods.setPassword(
+        userToSetPassword.id,
+        "incorrect_oldpassword",
+        ""
+      );
+      expect(result.ok()).toBe(false);
+      expect(result.getError().statusCode).toBe(Status.BAD_REQUEST);
+    });
+  });
+
   describe("destroy", () => {
     test("should return destroy user by id", async () => {
-      const userToDelete = await Users.findOne({
-        where: { id: userIdToDelete },
+      const existingUser = await Users.findOne({
+        where: { id: userToDelete.id },
       });
-      expect(userToDelete).not.toBeNull();
+      expect(existingUser).not.toBeNull();
 
-      const result = await methods.destroy(userIdToDelete);
+      const result = await methods.destroy(userToDelete.id);
       expect(result.ok()).toBe(true);
 
       const deletedUser = await Users.findOne({
-        where: { id: userIdToDelete },
+        where: { id: userToDelete.id },
       });
       expect(deletedUser).toBeNull();
     });
 
     test("should not fail if user is not found", async () => {
-      const result = await methods.destroy("-1");
+      const result = await methods.destroy(-1);
       expect(result.ok()).toBe(true);
     });
   });
