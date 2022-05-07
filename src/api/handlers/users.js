@@ -2,6 +2,7 @@ const methods = require("../methods/users");
 const httpErrors = require("http-errors");
 const { to } = require("../../common/helpers/asyncUtils");
 const httpResponse = require("../../common/helpers/httpResponse");
+const logger = require("../../common/logger");
 
 /**
  * @param  {Express.Request} req
@@ -14,7 +15,7 @@ async function list(req, res, next) {
   const [err, result] = await to(methods.list(options));
 
   if (err) {
-    req.logger.error(err);
+    logger.error(err);
     return next(new httpErrors.InternalServerError());
   }
 
@@ -36,7 +37,7 @@ async function register(req, res, next) {
   const [err, result] = await to(methods.register(options));
 
   if (err) {
-    req.logger.error(err);
+    logger.error(err);
     return next(new httpErrors.InternalServerError());
   }
 
@@ -58,7 +59,7 @@ async function findById(req, res, next) {
   const [err, result] = await to(methods.findById(req.params.id));
 
   if (err) {
-    req.logger.error(err);
+    logger.error(err);
     return next(new httpErrors.InternalServerError());
   }
 
@@ -87,7 +88,7 @@ async function setPassword(req, res, next) {
   );
 
   if (err) {
-    req.logger.error(err);
+    logger.error(err);
     return next(new httpErrors.InternalServerError());
   }
 
@@ -110,7 +111,7 @@ async function destroy(req, res, next) {
   const [err, result] = await to(methods.destroy(req.params.id));
 
   if (err) {
-    req.logger.error(err);
+    logger.error(err);
     return next(new httpErrors.InternalServerError());
   }
 

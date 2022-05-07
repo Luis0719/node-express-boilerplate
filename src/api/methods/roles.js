@@ -39,7 +39,7 @@ async function list(options) {
 async function store(params) {
   const [errorRole, role] = await to(Roles.create(params));
   if (errorRole) {
-    return sequelizeUtils.toStatusError(error);
+    return sequelizeUtils.toStatusError(errorRole);
   }
 
   const roleActions = params.actions.map((action) => ({
@@ -49,7 +49,7 @@ async function store(params) {
 
   const [errorRoleActions] = await to(RoleActions.bulkCreate(roleActions));
   if (errorRoleActions) {
-    return sequelizeUtils.toStatusError(error);
+    return sequelizeUtils.toStatusError(errorRoleActions);
   }
 
   return new Status(Status.OK, role);

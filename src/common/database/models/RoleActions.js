@@ -10,6 +10,7 @@ module.exports = (sequelize) => {
     },
     {
       tableName: "role_actions",
+      paranoid: false,
     }
   );
 

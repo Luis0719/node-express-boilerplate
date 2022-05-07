@@ -1,3 +1,5 @@
+const logger = require("../logger");
+
 /**
  * @param  {Promise} promise
  * @return {[err, any]} result
@@ -23,8 +25,7 @@ function requestTo(handler) {
       const result = await handler(req, res, next);
       return result;
     } catch (err) {
-      console.log(err);
-      req.logger.error(err, err.stack);
+      logger.error(err, err.stack);
       return next(err);
     }
   };
