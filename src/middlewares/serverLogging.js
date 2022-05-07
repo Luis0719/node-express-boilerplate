@@ -36,6 +36,7 @@ function register(app) {
     ],
     exceptionHandlers: [
       new winston.transports.File({ filename: "logs/exceptions.log" }),
+      new winston.transports.Console({}),
     ],
   });
 

@@ -17,9 +17,6 @@ module.exports = {
       updated_at: {
         type: Sequelize.DATE,
       },
-      deleted_at: {
-        type: Sequelize.DATE,
-      },
     });
 
     await queryInterface.addColumn(tableName, "role_id", {

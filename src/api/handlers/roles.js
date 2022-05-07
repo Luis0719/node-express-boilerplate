@@ -45,4 +45,25 @@ async function store(req, res, next) {
   return httpResponse.representAs(res, "basicRole", result.data);
 }
 
-module.exports = { store, list };
+/**
+ * @param  {Express.Request} req
+ * @param  {Express.Response} res
+ * @param  {Express.Next} next
+ */
+async function update(req, res, next) {
+  const params = req.body;
+  const [err, result] = await to(methods.update(req.params.id, params));
+
+  if (err) {
+    req.logger.error(err);
+    return next(new httpErrors.InternalServerError());
+  }
+
+  if (!result.ok()) {
+    return next(result.getError());
+  }
+
+  return httpResponse.representAs(res, "basicRole", result.data);
+}
+
+module.exports = { store, list, update };

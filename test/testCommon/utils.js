@@ -1,3 +1,5 @@
+const _ = require("lodash");
+
 /**
  * Add query params to url
  * @param  {String} url

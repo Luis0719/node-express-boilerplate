@@ -13,6 +13,7 @@ module.exports = (sequelize) => {
     },
     {
       tableName: "roles",
+      paranoid: false,
     }
   );
 
