@@ -10,11 +10,11 @@ module.exports = {
         type: Sequelize.INTEGER,
       },
       first_name: {
-        type: Sequelize.STRING(30),
+        type: Sequelize.STRING(50),
         allowNull: false,
       },
       last_name: {
-        type: Sequelize.STRING(30),
+        type: Sequelize.STRING(50),
       },
       image: {
         type: Sequelize.STRING,
@@ -27,6 +27,7 @@ module.exports = {
       password: {
         type: Sequelize.STRING,
         allowNull: false,
+        type: Sequelize.STRING(50),
       },
       email: {
         type: Sequelize.STRING(50),

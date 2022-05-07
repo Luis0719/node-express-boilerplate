@@ -1,4 +1,6 @@
 const { Roles, RoleActions } = require("../../common/database").models;
+const sequelizeUtils = require("../../common/helpers/sequelizeUtils");
+const { to } = require("../../common/helpers/asyncUtils");
 const Status = require("../../common/helpers/status");
 const { Op } = require("sequelize");
 const _ = require("lodash");
@@ -35,14 +37,20 @@ async function list(options) {
  * @return {Status}
  */
 async function store(params) {
-  const role = await Roles.create(params);
+  const [errorRole, role] = await to(Roles.create(params));
+  if (errorRole) {
+    return sequelizeUtils.toStatusError(error);
+  }
 
   const roleActions = params.actions.map((action) => ({
     role_id: role.id,
     action_id: action,
   }));
 
-  await RoleActions.bulkCreate(roleActions);
+  const [errorRoleActions] = await to(RoleActions.bulkCreate(roleActions));
+  if (errorRoleActions) {
+    return sequelizeUtils.toStatusError(error);
+  }
 
   return new Status(Status.OK, role);
 }

@@ -9,14 +9,14 @@ const { body, query, param } = require("express-validator");
 function register(app) {
   app.get(
     "/roles",
-    query("name").isLength({ min: 2, max: 15 }).optional(),
+    query("name").isLength({ min: 2, max: 40 }).optional(),
     validateInput,
     requestTo(handlers.list)
   );
 
   app.post(
     "/roles/store",
-    body("name").isLength({ min: 2, max: 15 }),
+    body("name").isLength({ min: 2, max: 40 }),
     body("actions").isArray(),
     validateInput,
     requestTo(handlers.store)
@@ -25,7 +25,7 @@ function register(app) {
   app.patch(
     "/roles/update/:id",
     param("id").isNumeric().toInt(),
-    body("name").isLength({ min: 2, max: 15 }),
+    body("name").isLength({ min: 2, max: 40 }),
     body("actions").isArray(),
     validateInput,
     requestTo(handlers.update)

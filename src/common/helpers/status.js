@@ -10,6 +10,7 @@ class CanonicalStatus {
   static UNAUTHORIZED = 401;
   static FORBIDDEN = 403;
   static NOT_FOUND = 404;
+  static INTERNAL_ERROR = 500;
   // End of TYPES
 
   static errors = {
@@ -17,6 +18,7 @@ class CanonicalStatus {
     401: httpErrors.Unauthorized,
     403: httpErrors.Forbidden,
     404: httpErrors.NotFound,
+    500: httpErrors.InternalServerError,
   };
   /**
    * @param  {CanonicalStatus.Type} type

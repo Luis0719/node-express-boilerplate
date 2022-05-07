@@ -11,10 +11,10 @@ function register(app) {
 
   app.post(
     "/users/register",
-    body("first_name").isLength({ min: 2, max: 30 }),
-    body("last_name").isLength({ min: 2, max: 30 }).optional(),
+    body("first_name").isLength({ min: 2, max: 50 }),
+    body("last_name").isLength({ min: 2, max: 50 }).optional(),
     body("email").isEmail().normalizeEmail(),
-    body("password").isLength({ min: 8, max: 30 }),
+    body("password").isLength({ min: 8, max: 50 }),
     body("roles").isArray(),
     validateInput,
     requestTo(handlers.register)
@@ -37,8 +37,8 @@ function register(app) {
 
       next();
     }, // TODO Add authentication
-    body("oldPassword").isLength({ min: 8, max: 30 }),
-    body("newPassword").isLength({ min: 8, max: 30 }),
+    body("oldPassword").isLength({ min: 8, max: 50 }),
+    body("newPassword").isLength({ min: 8, max: 50 }),
     validateInput,
     requestTo(handlers.setPassword)
   );

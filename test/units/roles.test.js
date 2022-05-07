@@ -85,6 +85,21 @@ describe("Roles Methods", () => {
       expect(roleActionsResult.length).toBe(1);
       expect(roleActionsResult[0].action_id).toBe(actions[0].id);
     });
+
+    test("should not have duplicated names", async () => {
+      const params = {
+        name: "create_test2_repeated_name",
+        actions: [],
+      };
+
+      await methods.store(params);
+      const result = await methods.store(params);
+      expect(result.ok()).toBe(false);
+      expect(result.getError().statusCode).toBe(Status.BAD_REQUEST);
+      expect(result.getError().message).toMatch(
+        "Key (name)=(create_test2_repeated_name) already exists"
+      );
+    });
   });
 
   describe("update", () => {
