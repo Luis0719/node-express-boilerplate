@@ -21,14 +21,14 @@ function register(app) {
   );
 
   app.get(
-    "/users/:id",
+    "/users/find/:id",
     param("id").isNumeric().toInt(),
     validateInput,
     requestTo(handlers.findById)
   );
 
   app.patch(
-    "/users/set-password",
+    "/users/update/set-password",
     (req, res, next) => {
       // TESTONLY
       req.user = {
@@ -44,7 +44,7 @@ function register(app) {
   );
 
   app.delete(
-    "/users/:id",
+    "/users/delete/:id",
     param("id").isNumeric().toInt(),
     validateInput,
     requestTo(handlers.destroy)

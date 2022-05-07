@@ -12,20 +12,27 @@ describe("Roles Endpoints", () => {
 
   describe("GET /roles", () => {
     const kUrl = "/roles";
+    const request = (queryParams) => {
+      if (queryParams) {
+        return server.get(testUtils.urlWithQueryParams(kUrl, queryParams));
+      }
+
+      return server.get(kUrl);
+    };
 
     test("should return OK if ok", async () => {
       methods.list.mockImplementationOnce(() =>
         Promise.resolve(new Status(Status.OK, []))
       );
 
-      const res = await server.get(kUrl);
+      const res = await request();
 
       expect(res.status).toBe(200);
       expect(methods.list).toHaveBeenCalledWith({});
     });
 
     test("should return OK with query params", async () => {
-      const params = {
+      const queryParams = {
         name: "test",
       };
 
@@ -33,10 +40,10 @@ describe("Roles Endpoints", () => {
         Promise.resolve(new Status(Status.OK, []))
       );
 
-      const res = await server.get(testUtils.urlWithQueryParams(kUrl, params));
+      const res = await request(queryParams);
 
       expect(res.status).toBe(200);
-      expect(methods.list).toHaveBeenCalledWith(params);
+      expect(methods.list).toHaveBeenCalledWith(queryParams);
     });
 
     test("should propagate errors", async () => {
@@ -44,7 +51,7 @@ describe("Roles Endpoints", () => {
         Promise.resolve(new Status(Status.OK, []))
       );
 
-      const res = await server.get(kUrl);
+      const res = await request();
 
       expect(res.status).toBe(200);
       expect(methods.list).toHaveBeenCalledWith({});
@@ -55,9 +62,7 @@ describe("Roles Endpoints", () => {
         name: "",
       };
 
-      const res = await server.get(
-        testUtils.urlWithQueryParams(kUrl, invalidParams)
-      );
+      const res = await request(invalidParams);
 
       expect(res.status).toBe(Status.BAD_REQUEST);
       for (const error of res.body.errors) {
@@ -69,6 +74,9 @@ describe("Roles Endpoints", () => {
 
   describe("POST /roles/store", () => {
     const kUrl = "/roles/store";
+    const request = (params = {}) => {
+      return server.post(kUrl).send(params);
+    };
 
     test("should return 200 if ok", async () => {
       const mockRoleOptions = {
@@ -82,7 +90,7 @@ describe("Roles Endpoints", () => {
         Promise.resolve(new Status(Status.OK, mockRole))
       );
 
-      const res = await server.post(kUrl).send(mockRoleOptions);
+      const res = await request(mockRoleOptions);
 
       expect(res.status).toBe(200);
       expect(res.body.name).toBe(mockRole.name);
@@ -99,7 +107,7 @@ describe("Roles Endpoints", () => {
         Promise.resolve(new Status(Status.FORBIDDEN))
       );
 
-      const res = await server.post(kUrl).send(mockRoleOptions);
+      const res = await request(mockRoleOptions);
 
       expect(res.status).toBe(Status.FORBIDDEN);
     });
@@ -110,7 +118,7 @@ describe("Roles Endpoints", () => {
         actions: null,
       };
 
-      const res = await server.post(kUrl).send(invalidParams);
+      const res = await request(invalidParams);
 
       expect(res.status).toBe(Status.BAD_REQUEST);
       for (const error of res.body.errors) {
