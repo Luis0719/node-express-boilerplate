@@ -3,6 +3,8 @@
 const { DataTypes } = require("sequelize");
 const crypto = require("../../crypto");
 
+const ADMIN_ID = 0;
+
 module.exports = (sequelize) => {
   const Users = sequelize.define(
     "Users",
@@ -42,7 +44,14 @@ module.exports = (sequelize) => {
     return crypto.compare(password, this.password);
   };
 
-  // Method 3 via the direct method
+  Users.prototype.isAdmin = function () {
+    return this.roles.includes(ADMIN_ID);
+  };
+
+  Users.isAdmin = function (user) {
+    return user.roles.includes(ADMIN_ID);
+  };
+
   Users.beforeCreate(async (user, options) => {
     await user.setPassword(user.password);
   });

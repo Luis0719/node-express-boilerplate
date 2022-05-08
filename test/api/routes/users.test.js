@@ -1,12 +1,12 @@
-const Status = require("../../src/common/helpers/status");
-const server = require("../testCommon/testServer").getTestServer();
-const methods = require("../../src/api/methods/users");
-const factories = require("../testCommon/database/factories");
-const mocks = require("../testCommon/mocks");
-const testUtils = require("../testCommon/utils");
+const Status = require("../../../src/common/helpers/status");
+const server = require("../../testCommon/testServer").getTestServer();
+const methods = require("../../../src/api/methods/users");
+const factories = require("../../testCommon/database/factories");
+const mocks = require("../../testCommon/mocks");
+const testUtils = require("../../testCommon/utils");
 
-jest.mock("../../src/api/methods/users");
-jest.mock("../../src/middlewares/auth/methods"); // Required so mock functions work
+jest.mock("../../../src/api/methods/users");
+jest.mock("../../../src/middlewares/auth/methods"); // Required so mock functions work
 
 describe("Users Endpoints", () => {
   describe("GET /users", () => {

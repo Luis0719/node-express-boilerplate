@@ -14,7 +14,7 @@ async function byRole(req, res, next) {
   const method = req.method;
 
   const [error, hasPermission] = await to(
-    methods.hasRolePermission(user.roles, url, method)
+    methods.hasRolePermission(user, url, method)
   );
 
   if (error) {

@@ -12,17 +12,24 @@ function findUser(id) {
   });
 }
 /**
- * @param  {int[]} roles
+ * This function will be ran for almost every endpoint.
+ * We should keep it as light as possible with the least request to the db as possible.
+ * @param  {Sequelize.models.Users} user
  * @param  {String} uri
  * @param  {String} method
  * @return {boolean} whether any of the roles have permission
  */
-async function hasRolePermission(roles, uri, method) {
+async function hasRolePermission(user, uri, method) {
+  if (Users.isAdmin(user)) {
+    return Promise.resolve(true);
+  }
+
   const action = await RoleActions.findOne(
     {
       attributes: ["id"],
-      role_id: roles,
-      action,
+      where: {
+        role_id: user.roles,
+      },
     },
     {
       include: [
@@ -33,6 +40,7 @@ async function hasRolePermission(roles, uri, method) {
             uri: uri,
             method,
           },
+          required: true,
         },
       ],
       raw: true,

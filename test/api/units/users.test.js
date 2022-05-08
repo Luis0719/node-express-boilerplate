@@ -1,7 +1,7 @@
-const Status = require("../../src/common/helpers/status");
-const methods = require("../../src/api/methods/users");
-const { Users } = require("../../src/common/database").models;
-const { factory } = require("../testCommon/database");
+const Status = require("../../../src/common/helpers/status");
+const methods = require("../../../src/api/methods/users");
+const { Users } = require("../../../src/common/database").models;
+const { factory } = require("../../testCommon/database");
 
 /**
  * @param  {Sequelize.Models.Users[]} users

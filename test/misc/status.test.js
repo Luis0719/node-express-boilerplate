@@ -1,4 +1,4 @@
-const Status = require("../../../src/common/helpers/status");
+const Status = require("../../src/common/helpers/status");
 
 describe("Helpers Status", () => {
   test("OK status", () => {

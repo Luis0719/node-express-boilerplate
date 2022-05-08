@@ -9,15 +9,8 @@ module.exports = {
   up: async (queryInterface, Sequelize) => {
     return queryInterface.bulkInsert(tableName, [
       {
+        id: 0,
         name: "admin",
-        ...defaultValues,
-      },
-      {
-        name: "radiologo",
-        ...defaultValues,
-      },
-      {
-        name: "tecnico",
         ...defaultValues,
       },
     ]);

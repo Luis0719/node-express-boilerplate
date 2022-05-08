@@ -1,7 +1,7 @@
-const Status = require("../../src/common/helpers/status");
-const methods = require("../../src/api/methods/roles");
-const { RoleActions } = require("../../src/common/database").models;
-const { factory, prefabs } = require("../testCommon/database");
+const Status = require("../../../src/common/helpers/status");
+const methods = require("../../../src/api/methods/roles");
+const { RoleActions } = require("../../../src/common/database").models;
+const { factory, prefabs } = require("../../testCommon/database");
 const _ = require("lodash");
 
 describe("Roles Methods", () => {
