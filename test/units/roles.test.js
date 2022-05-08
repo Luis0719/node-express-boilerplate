@@ -1,8 +1,7 @@
 const Status = require("../../src/common/helpers/status");
 const methods = require("../../src/api/methods/roles");
-const { Roles, Actions, RoleActions } =
-  require("../../src/common/database").models;
-const { dbUtils, factory, prefabs } = require("../testCommon/database");
+const { RoleActions } = require("../../src/common/database").models;
+const { factory, prefabs } = require("../testCommon/database");
 const _ = require("lodash");
 
 describe("Roles Methods", () => {
@@ -10,9 +9,6 @@ describe("Roles Methods", () => {
   let actions;
 
   beforeAll(async function () {
-    await dbUtils.cleanDatabase(Roles);
-    await dbUtils.cleanDatabase(Actions);
-
     actions = await prefabs.actions.createTestActions([
       { uri: "action1" },
       { uri: "action2" },

@@ -25,7 +25,8 @@ function requestTo(handler) {
       const result = await handler(req, res, next);
       return result;
     } catch (err) {
-      logger.error(err, err.stack);
+      logger.error(err.message);
+      logger.error(err.stack);
       return next(err);
     }
   };

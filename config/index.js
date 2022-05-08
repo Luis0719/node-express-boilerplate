@@ -27,6 +27,8 @@ module.exports = {
   auth: {
     jwt: {
       secretOrKey: process.env.JWT_SECRET_KEY,
+      expiration: 60 * 60 * 24, // 1 day
+      algorithm: process.env.JWT_ALGORITHM,
     },
   },
   bcrypt: {

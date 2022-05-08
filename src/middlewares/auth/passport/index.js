@@ -7,7 +7,7 @@ const localStrategy = require("./local-strategy");
  */
 function register(app) {
   passport.use(localStrategy);
-  passport.use(jwtStrategy);
+  passport.use("jwt", jwtStrategy);
 
   app.use(passport.initialize());
 }

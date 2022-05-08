@@ -1,4 +1,4 @@
-const _ = require("lodash");
+const jwt = require("../../src/common/helpers/jwt");
 
 /**
  * Add query params to url
@@ -20,21 +20,16 @@ function urlWithQueryParams(url, params) {
 }
 
 /**
- * @param  {Object} options={}
- * @return {Object} mock request
+ * @param  {SuperTest.Request} request
+ * @param  {int} id
+ * @return {SuperTest.Request} request with authorized headers
  */
-function mockRequest(options = {}) {
-  return {
-    logger: {
-      info: () => {},
-      warn: () => {},
-      error: () => {},
-    },
-    ...options,
-  };
+async function authorizeJwt(request, id) {
+  const jwtToken = await jwt.sign({ id });
+  return request.set("authorization", "Bearer " + jwtToken);
 }
 
 module.exports = {
-  mockRequest,
+  authorizeJwt,
   urlWithQueryParams,
 };

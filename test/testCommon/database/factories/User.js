@@ -5,6 +5,7 @@ const defaultAttrs = {
   last_name: "lastname",
   username: "test",
   password: "testpass",
+  roles: [],
 };
 
 module.exports = {

@@ -2,13 +2,13 @@ const Status = require("../../src/common/helpers/status");
 const server = require("../testCommon/testServer").getTestServer();
 const methods = require("../../src/api/methods/users");
 const factories = require("../testCommon/database/factories");
+const mocks = require("../testCommon/mocks");
+const testUtils = require("../testCommon/utils");
+
 jest.mock("../../src/api/methods/users");
+jest.mock("../../src/middlewares/auth/methods"); // Required so mock functions work
 
 describe("Users Endpoints", () => {
-  afterAll(() => {
-    jest.clearAllMocks();
-  });
-
   describe("GET /users", () => {
     const kUrl = "/users";
     const request = () => {
@@ -117,8 +117,14 @@ describe("Users Endpoints", () => {
 
   describe("GET /users/find/:id", () => {
     const kUrl = "/users/find";
-    const request = (id) => {
-      return server.get(`${kUrl}/${id}`);
+    const request = (id, addJwt = true) => {
+      const req = server.get(`${kUrl}/${id}`);
+
+      if (addJwt) {
+        return testUtils.authorizeJwt(req, id);
+      }
+
+      return req;
     };
 
     test("should return 200 with valid user", async () => {
@@ -127,25 +133,47 @@ describe("Users Endpoints", () => {
         Promise.resolve(new Status(Status.OK, mockUser))
       );
 
+      mocks.jwtValidUser(mockUser);
+      mocks.validRolePermission();
+
       const res = await request(1);
       expect(res.status).toEqual(200);
       expect(res.body.first_name).toBe(mockUser.first_name);
       expect(methods.findById).toHaveBeenCalledWith(1);
     });
 
-    test("should return 404 if user is not found", async () => {
+    test("should return NOT_FOUND if user is not found", async () => {
+      const mockUser = factories.User.build();
       methods.findById.mockImplementationOnce(() =>
         Promise.resolve(new Status(Status.NOT_FOUND))
       );
+      mocks.jwtValidUser(mockUser);
+      mocks.validRolePermission();
 
       const res = await request(-1);
-      expect(res.status).toEqual(404);
+      expect(res.status).toEqual(Status.NOT_FOUND);
       expect(methods.findById).toHaveBeenCalledWith(-1);
     });
 
-    test("should return 400 if user id is not valid", async () => {
+    test("should return BAD_REQUEST if user id is not valid", async () => {
       const res = await request("INVALID_ID");
-      expect(res.status).toEqual(400);
+      expect(res.status).toEqual(Status.BAD_REQUEST);
+    });
+
+    test("should return UNATHORIZED if requesting user is not valid", async () => {
+      mocks.jwtInvalidUser();
+      const res = await request(1);
+
+      expect(res.status).toEqual(Status.UNAUTHORIZED);
+    });
+
+    test("should return UNATHORIZED if requesting role is not allowed", async () => {
+      const mockUser = factories.User.build();
+      mocks.jwtValidUser(mockUser);
+      mocks.invalidRolePermission();
+      const res = await request(1);
+
+      expect(res.status).toEqual(Status.UNAUTHORIZED);
     });
   });
 

@@ -1,7 +1,7 @@
 const Status = require("../../src/common/helpers/status");
 const methods = require("../../src/api/methods/users");
 const { Users } = require("../../src/common/database").models;
-const { dbUtils, factory } = require("../testCommon/database");
+const { factory } = require("../testCommon/database");
 
 /**
  * @param  {Sequelize.Models.Users[]} users
@@ -18,8 +18,6 @@ describe("Users Methods", () => {
   let userToDelete;
 
   beforeAll(async function () {
-    await dbUtils.cleanDatabase(Users);
-
     // Create all testable users at the beginning. This makes it easier to parallelize all tests.
     const promises = [
       factory.User.create({

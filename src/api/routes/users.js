@@ -1,6 +1,8 @@
 const { requestTo } = require("../../common/helpers/asyncUtils");
 const handlers = require("../handlers/users");
 const validateInput = require("../../middlewares/validateInput");
+const authByRole = require("../../middlewares/auth/byRole");
+const passport = require("passport");
 const { param, body } = require("express-validator");
 
 /**
@@ -24,6 +26,8 @@ function register(app) {
     "/users/find/:id",
     param("id").isNumeric().toInt(),
     validateInput,
+    passport.authenticate("jwt", { session: false }),
+    authByRole,
     requestTo(handlers.findById)
   );
 

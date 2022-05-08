@@ -6,10 +6,6 @@ const testUtils = require("../testCommon/utils");
 jest.mock("../../src/api/methods/roles");
 
 describe("Roles Endpoints", () => {
-  afterAll(() => {
-    jest.clearAllMocks();
-  });
-
   describe("GET /roles", () => {
     const kUrl = "/roles";
     const request = (queryParams) => {

@@ -15,14 +15,14 @@ function cleanDatabase(model) {
     });
   }
 
-  const promises = Object.entries(models).map((model) =>
+  const promises = Object.values(models).map((model) =>
     model.destroy({
       truncate: true,
       force: true,
       cascade: true,
     })
   );
-  return promises.all();
+  return Promise.all(promises);
 }
 
 module.exports = {
