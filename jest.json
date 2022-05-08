@@ -1,9 +1,10 @@
 {
-  "verbose": true,
+  "clearMocks": true,
   "errorOnDeprecated": true,
-  "testEnvironment": "node",
+  "globalSetup": "./test/init.js",
+  "globalTeardown": "./test/teardown.js",
+  "maxConcurrency": 5,
   "roots": ["test/"],
-  "setupFiles": ["./test/init.js"],
-  "//": "We do not support parallel testing since we use a database. We should reconsider our testing strategy",
-  "maxConcurrency": 5
+  "testEnvironment": "node",
+  "verbose": true
 }
