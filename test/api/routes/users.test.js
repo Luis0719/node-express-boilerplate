@@ -198,9 +198,7 @@ describe("Users Endpoints", () => {
         Promise.resolve(new Status(Status.OK))
       );
 
-      const mockUser = factories.User.build();
-      mockUser.id = 1;
-      mocks.jwtValidUser(mockUser);
+      mocks.jwtValidUser({ id: 1 });
       mocks.validRolePermission();
       const res = await request(params);
 

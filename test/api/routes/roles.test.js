@@ -2,18 +2,23 @@ const Status = require("../../../src/common/helpers/status");
 const server = require("../../testCommon/testServer").getTestServer();
 const methods = require("../../../src/api/methods/roles");
 const factories = require("../../testCommon/database/factories");
+const mocks = require("../../testCommon/mocks");
 const testUtils = require("../../testCommon/utils");
+
 jest.mock("../../../src/api/methods/roles");
+jest.mock("../../../src/middlewares/auth/methods"); // Required so mock functions work
 
 describe("Roles Endpoints", () => {
   describe("GET /roles", () => {
     const kUrl = "/roles";
     const request = (queryParams) => {
+      let url = kUrl;
       if (queryParams) {
-        return server.get(testUtils.urlWithQueryParams(kUrl, queryParams));
+        url = testUtils.urlWithQueryParams(kUrl, queryParams);
       }
 
-      return server.get(kUrl);
+      const req = server.get(url);
+      return testUtils.decorateRequest(req, { addJwt: true, jwtData: 1 });
     };
 
     test("should return OK if ok", async () => {
@@ -21,6 +26,8 @@ describe("Roles Endpoints", () => {
         Promise.resolve(new Status(Status.OK, []))
       );
 
+      mocks.jwtValidUser();
+      mocks.validRolePermission();
       const res = await request();
 
       expect(res.status).toBe(200);
@@ -36,6 +43,8 @@ describe("Roles Endpoints", () => {
         Promise.resolve(new Status(Status.OK, []))
       );
 
+      mocks.jwtValidUser();
+      mocks.validRolePermission();
       const res = await request(queryParams);
 
       expect(res.status).toBe(200);
@@ -47,6 +56,8 @@ describe("Roles Endpoints", () => {
         Promise.resolve(new Status(Status.OK, []))
       );
 
+      mocks.jwtValidUser();
+      mocks.validRolePermission();
       const res = await request();
 
       expect(res.status).toBe(200);
@@ -58,6 +69,8 @@ describe("Roles Endpoints", () => {
         name: "",
       };
 
+      mocks.jwtValidUser();
+      mocks.validRolePermission();
       const res = await request(invalidParams);
 
       expect(res.status).toBe(Status.BAD_REQUEST);
@@ -71,7 +84,8 @@ describe("Roles Endpoints", () => {
   describe("POST /roles/store", () => {
     const kUrl = "/roles/store";
     const request = (params = {}) => {
-      return server.post(kUrl).send(params);
+      const req = server.post(kUrl).send(params);
+      return testUtils.decorateRequest(req, { addJwt: true, jwtData: 1 });
     };
 
     test("should return 200 if ok", async () => {
@@ -86,6 +100,8 @@ describe("Roles Endpoints", () => {
         Promise.resolve(new Status(Status.OK, mockRole))
       );
 
+      mocks.jwtValidUser();
+      mocks.validRolePermission();
       const res = await request(mockRoleOptions);
 
       expect(res.status).toBe(200);
@@ -103,6 +119,8 @@ describe("Roles Endpoints", () => {
         Promise.resolve(new Status(Status.FORBIDDEN))
       );
 
+      mocks.jwtValidUser();
+      mocks.validRolePermission();
       const res = await request(mockRoleOptions);
 
       expect(res.status).toBe(Status.FORBIDDEN);
@@ -114,6 +132,8 @@ describe("Roles Endpoints", () => {
         actions: null,
       };
 
+      mocks.jwtValidUser();
+      mocks.validRolePermission();
       const res = await request(invalidParams);
 
       expect(res.status).toBe(Status.BAD_REQUEST);
@@ -126,7 +146,8 @@ describe("Roles Endpoints", () => {
 
   describe("PATCH /roles/update/:id", () => {
     const request = (id, params = {}) => {
-      return server.patch(`/roles/update/${id}`).send(params);
+      const req = server.patch(`/roles/update/${id}`).send(params);
+      return testUtils.decorateRequest(req, { addJwt: true, jwtData: 1 });
     };
 
     test("should return 200 if ok", async () => {
@@ -140,6 +161,8 @@ describe("Roles Endpoints", () => {
         Promise.resolve(new Status(Status.OK, mockRole))
       );
 
+      mocks.jwtValidUser();
+      mocks.validRolePermission();
       const res = await request(1, mockRoleOptions);
 
       expect(res.status).toBe(200);
@@ -157,6 +180,8 @@ describe("Roles Endpoints", () => {
         Promise.resolve(new Status(Status.FORBIDDEN))
       );
 
+      mocks.jwtValidUser();
+      mocks.validRolePermission();
       const res = await request(1, mockRoleOptions);
 
       expect(res.status).toBe(Status.FORBIDDEN);
@@ -168,6 +193,8 @@ describe("Roles Endpoints", () => {
         actions: null,
       };
 
+      mocks.jwtValidUser();
+      mocks.validRolePermission();
       const res = await await request(1, invalidParams);
 
       expect(res.status).toBe(Status.BAD_REQUEST);
