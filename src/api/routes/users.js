@@ -11,14 +11,29 @@ const { param, body } = require("express-validator");
 function register(app) {
   app.get("/users", requestTo(handlers.list));
 
+  // Public version of user creation
+  // TODO add recaptcha
   app.post(
     "/users/register",
     body("first_name").isLength({ min: 2, max: 50 }),
     body("last_name").isLength({ min: 2, max: 50 }).optional(),
     body("email").isEmail().normalizeEmail(),
     body("password").isLength({ min: 8, max: 50 }),
+    body("roles").isArray().default([]),
+    validateInput,
+    requestTo(handlers.register)
+  );
+
+  app.post(
+    "/users/store",
+    body("first_name").isLength({ min: 2, max: 50 }),
+    body("last_name").isLength({ min: 2, max: 50 }).optional(),
+    body("email").isEmail().normalizeEmail(),
+    body("password").isLength({ min: 8, max: 50 }),
     body("roles").isArray(),
     validateInput,
+    passport.authenticate("jwt", { session: false }),
+    authByRole,
     requestTo(handlers.register)
   );
 
@@ -33,17 +48,11 @@ function register(app) {
 
   app.patch(
     "/users/update/set-password",
-    (req, res, next) => {
-      // TESTONLY
-      req.user = {
-        id: 1,
-      };
-
-      next();
-    }, // TODO Add authentication
     body("oldPassword").isLength({ min: 8, max: 50 }),
     body("newPassword").isLength({ min: 8, max: 50 }),
     validateInput,
+    passport.authenticate("jwt", { session: false }),
+    authByRole,
     requestTo(handlers.setPassword)
   );
 
@@ -51,6 +60,8 @@ function register(app) {
     "/users/delete/:id",
     param("id").isNumeric().toInt(),
     validateInput,
+    passport.authenticate("jwt", { session: false }),
+    authByRole,
     requestTo(handlers.destroy)
   );
 }

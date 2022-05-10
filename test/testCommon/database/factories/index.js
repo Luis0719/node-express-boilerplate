@@ -1,5 +1,3 @@
-const requireDir = require("require-directory");
-
 /**
  * Class to create Sequelize.Models
  */
@@ -53,6 +51,10 @@ class Factory {
   }
 }
 
-const buildFactory = (obj) => new Factory(obj);
-
-module.exports = requireDir(module, { visit: buildFactory });
+module.exports = {
+  Action: new Factory(require("./Action")),
+  ActionGroup: new Factory(require("./ActionGroup")),
+  Role: new Factory(require("./Role")),
+  RoleAction: new Factory(require("./RoleAction")),
+  User: new Factory(require("./User")),
+};

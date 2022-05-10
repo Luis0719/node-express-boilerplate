@@ -12,7 +12,8 @@ describe("Users Endpoints", () => {
   describe("GET /users", () => {
     const kUrl = "/users";
     const request = () => {
-      return server.get(kUrl);
+      const req = server.get(kUrl);
+      return testUtils.decorateRequest(req, { addJwt: true, jwtData: 1 });
     };
 
     test("should return 200 if ok", async () => {
@@ -20,6 +21,9 @@ describe("Users Endpoints", () => {
       methods.list.mockImplementationOnce(() =>
         Promise.resolve(new Status(Status.OK, [mockUser]))
       );
+
+      mocks.jwtValidUser(mockUser);
+      mocks.validRolePermission();
 
       const res = await request(`/users`);
 
@@ -35,7 +39,8 @@ describe("Users Endpoints", () => {
   describe("POST /users/register", () => {
     const kUrl = "/users/register";
     const request = (params = {}) => {
-      return server.post(kUrl).send(params);
+      const req = server.post(kUrl).send(params);
+      return testUtils.decorateRequest(req, { addJwt: true, jwtData: 1 });
     };
 
     test("should return 200 if ok", async () => {
@@ -53,6 +58,8 @@ describe("Users Endpoints", () => {
         Promise.resolve(new Status(Status.OK, mockUser))
       );
 
+      mocks.jwtValidUser(mockUser);
+      mocks.validRolePermission();
       const res = await request(mockUserOptions);
 
       expect(res.status).toBe(200);
@@ -73,6 +80,8 @@ describe("Users Endpoints", () => {
         Promise.resolve(new Status(Status.BAD_REQUEST))
       );
 
+      mocks.jwtValidUser();
+      mocks.validRolePermission();
       const res = await request(mockUserOptions);
 
       expect(res.status).toBe(Status.BAD_REQUEST);
@@ -91,6 +100,8 @@ describe("Users Endpoints", () => {
         Promise.resolve(new Status(Status.OK, {}))
       );
 
+      mocks.jwtValidUser();
+      mocks.validRolePermission();
       const res = await request(params);
 
       expect(res.status).toBe(Status.OK);
@@ -117,14 +128,9 @@ describe("Users Endpoints", () => {
 
   describe("GET /users/find/:id", () => {
     const kUrl = "/users/find";
-    const request = (id, addJwt = true) => {
+    const request = (id) => {
       const req = server.get(`${kUrl}/${id}`);
-
-      if (addJwt) {
-        return testUtils.authorizeJwt(req, id);
-      }
-
-      return req;
+      return testUtils.decorateRequest(req, { addJwt: true, jwtData: id });
     };
 
     test("should return 200 with valid user", async () => {
@@ -143,11 +149,10 @@ describe("Users Endpoints", () => {
     });
 
     test("should return NOT_FOUND if user is not found", async () => {
-      const mockUser = factories.User.build();
       methods.findById.mockImplementationOnce(() =>
         Promise.resolve(new Status(Status.NOT_FOUND))
       );
-      mocks.jwtValidUser(mockUser);
+      mocks.jwtValidUser();
       mocks.validRolePermission();
 
       const res = await request(-1);
@@ -168,8 +173,7 @@ describe("Users Endpoints", () => {
     });
 
     test("should return UNATHORIZED if requesting role is not allowed", async () => {
-      const mockUser = factories.User.build();
-      mocks.jwtValidUser(mockUser);
+      mocks.jwtValidUser();
       mocks.invalidRolePermission();
       const res = await request(1);
 
@@ -180,7 +184,8 @@ describe("Users Endpoints", () => {
   describe("PATCH /users/update/set-password", () => {
     const kUrl = "/users/update/set-password";
     const request = (params = {}) => {
-      return server.patch(kUrl).send(params);
+      const req = server.patch(kUrl).send(params);
+      return testUtils.decorateRequest(req, { addJwt: true, jwtData: 1 });
     };
 
     test("should return 200 with happy path", async () => {
@@ -193,7 +198,12 @@ describe("Users Endpoints", () => {
         Promise.resolve(new Status(Status.OK))
       );
 
+      const mockUser = factories.User.build();
+      mockUser.id = 1;
+      mocks.jwtValidUser(mockUser);
+      mocks.validRolePermission();
       const res = await request(params);
+
       expect(res.status).toEqual(Status.OK);
       expect(methods.setPassword).toHaveBeenCalledWith(
         1,
@@ -211,7 +221,11 @@ describe("Users Endpoints", () => {
       methods.setPassword.mockImplementationOnce(() =>
         Promise.resolve(new Status(Status.FORBIDDEN))
       );
+
+      mocks.jwtValidUser();
+      mocks.validRolePermission();
       const res = await request(params);
+
       expect(res.status).toEqual(403);
     });
 
@@ -234,7 +248,8 @@ describe("Users Endpoints", () => {
   describe("DELETE /users/delete/:id", () => {
     const kUrl = "/users/delete";
     const request = (id) => {
-      return server.delete(`${kUrl}/${id}`);
+      const req = server.delete(`${kUrl}/${id}`);
+      return testUtils.decorateRequest(req, { addJwt: true, jwtData: id });
     };
 
     test("should return 200 with valid user id", async () => {
@@ -242,7 +257,10 @@ describe("Users Endpoints", () => {
         Promise.resolve(new Status(Status.OK))
       );
 
+      mocks.jwtValidUser();
+      mocks.validRolePermission();
       const res = await request(1);
+
       expect(res.status).toEqual(200);
       expect(methods.destroy).toHaveBeenCalledWith(1);
     });
@@ -256,7 +274,11 @@ describe("Users Endpoints", () => {
       methods.destroy.mockImplementationOnce(() =>
         Promise.resolve(new Status(Status.FORBIDDEN))
       );
+
+      mocks.jwtValidUser();
+      mocks.validRolePermission();
       const res = await request(1);
+
       expect(res.status).toEqual(403);
       expect(methods.destroy).toHaveBeenCalledWith(1);
     });

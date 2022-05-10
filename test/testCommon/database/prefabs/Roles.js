@@ -1,6 +1,9 @@
 const factories = require("../factories");
 let adminRole;
 
+// This must always align with the one defined at common/database/models/users
+const ADMIN_ID = 0;
+
 /**
  * Create admin role
  * @return {Promise} role create
@@ -8,7 +11,7 @@ let adminRole;
 async function getAdminRole() {
   if (!adminRole) {
     adminRole = await factories.Role.create({
-      id: 0,
+      id: ADMIN_ID,
       name: "admin",
       is_admin: true,
     });

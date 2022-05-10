@@ -29,7 +29,21 @@ async function authorizeJwt(request, id) {
   return request.set("authorization", "Bearer " + jwtToken);
 }
 
+/**
+ * @param  {SuperTest.Request} request
+ * @param  {Object} options={}
+ * @return {SuperTest.Request}
+ */
+async function decorateRequest(request, options = {}) {
+  if (options.addJwt) {
+    request = authorizeJwt(request, options.jwtData);
+  }
+
+  return request;
+}
+
 module.exports = {
   authorizeJwt,
+  decorateRequest,
   urlWithQueryParams,
 };

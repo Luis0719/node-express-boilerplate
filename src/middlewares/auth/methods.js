@@ -8,9 +8,17 @@ function findUser(id) {
   return Users.findByPk(id, {
     attributes: ["id", "first_name", "last_name", "username", "roles"],
     raw: true,
-    logging: console.log,
   });
 }
+
+/**
+ * @param  {Sequelize.models.Users} user
+ * @return {boolean} isAdmin
+ */
+async function isAdmin(user) {
+  return Users.isAdmin(user);
+}
+
 /**
  * This function will be ran for almost every endpoint.
  * We should keep it as light as possible with the least request to the db as possible.
@@ -20,7 +28,7 @@ function findUser(id) {
  * @return {boolean} whether any of the roles have permission
  */
 async function hasRolePermission(user, uri, method) {
-  if (Users.isAdmin(user)) {
+  if (isAdmin(user)) {
     return Promise.resolve(true);
   }
 
@@ -44,7 +52,6 @@ async function hasRolePermission(user, uri, method) {
         },
       ],
       raw: true,
-      logging: console.log,
     }
   );
 
@@ -54,4 +61,5 @@ async function hasRolePermission(user, uri, method) {
 module.exports = {
   findUser,
   hasRolePermission,
+  isAdmin,
 };
