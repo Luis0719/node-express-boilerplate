@@ -1,7 +1,7 @@
 const passport = require("passport");
 
-const jwtStrategy = require("./jwt-strategy");
-const localStrategy = require("./local-strategy");
+const jwtStrategy = require("./jwt-strategy").strategy;
+const localStrategy = require("./local-strategy").strategy;
 /**
  * @param  {Express.App} app
  */

@@ -4,9 +4,23 @@ const { Users, RoleActions, Actions } = require("../../common/database").models;
  * @param  {int} id user Id
  * @return {Sequelize.models.Users}
  */
-function findUser(id) {
+function findUserById(id) {
   return Users.findByPk(id, {
     attributes: ["id", "first_name", "last_name", "username", "roles"],
+    raw: true,
+  });
+}
+
+/**
+ * @param  {String} username user Id
+ * @return {Sequelize.models.Users}
+ */
+function findUserByUsername(username) {
+  return Users.findOne({
+    attributes: ["id", "first_name", "last_name", "username", "roles"],
+    where: {
+      username,
+    },
     raw: true,
   });
 }
@@ -59,7 +73,8 @@ async function hasRolePermission(user, uri, method) {
 }
 
 module.exports = {
-  findUser,
+  findUserById,
+  findUserByUsername,
   hasRolePermission,
   isAdmin,
 };

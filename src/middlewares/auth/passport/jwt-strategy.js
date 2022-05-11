@@ -11,36 +11,34 @@ function hasJwtExpired(data) {
   return false;
 }
 
+/**
+ * @param  {String} token
+ * @return {Sequelize.models.User}
+ */
+async function verify(token) {
+  const decoded = await jwt.verify(token);
+
+  if (hasJwtExpired(decoded)) {
+    return null;
+  }
+
+  const userData = decoded.data;
+  return methods.findUserById(userData.id);
+}
+
 const strategy = new BearerStrategy(function (token, done) {
-  // Passport strategy do not support async callbacks
-  jwt
-    .verify(token)
-    .then((decoded) => {
-      if (hasJwtExpired(decoded)) {
-        return done(null, false);
-      }
-      const userData = decoded.data;
+  verify(token)
+    .then((user) => {
+      if (!user) return done(null, false);
 
-      methods
-        .findUser(userData.id)
-        .then((user) => {
-          if (!user) {
-            return done(null, false);
-          }
-
-          return done(null, user);
-        })
-        .catch((err) => {
-          logger.error(err.message);
-          logger.error(err.stack);
-          return done(err, null);
-        });
+      return done(null, user);
     })
     .catch((err) => {
       logger.error(err.message);
       logger.error(err.stack);
+      console.log(err);
       return done(err, false);
     });
 });
 
-module.exports = strategy;
+module.exports = { strategy, verify };

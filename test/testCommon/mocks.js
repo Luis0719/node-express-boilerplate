@@ -4,13 +4,15 @@ const authMethods = require("../../src/middlewares/auth/methods");
  * @param {Object} mockUserData
  */
 function jwtValidUser(mockUserData = {}) {
-  authMethods.findUser.mockImplementation(() => Promise.resolve(mockUserData));
+  authMethods.findUserById.mockImplementation(() =>
+    Promise.resolve(mockUserData)
+  );
 }
 
 /**
  */
 function jwtInvalidUser() {
-  authMethods.findUser.mockImplementation(() => Promise.resolve(null));
+  authMethods.findUserById.mockImplementation(() => Promise.resolve(null));
 }
 
 /**

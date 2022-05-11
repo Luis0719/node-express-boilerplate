@@ -26,15 +26,15 @@ describe("Middlewars auth methods", () => {
     guest = users[1];
   });
 
-  describe("findUser", () => {
+  describe("findUserById", () => {
     test("should return user happy path", async () => {
-      const user = await methods.findUser(guest.id);
+      const user = await methods.findUserById(guest.id);
       expect(user.id).toBe(guest.id);
       expect(user.roles).toEqual(guest.roles);
     });
 
     test("should return null if user is not found", async () => {
-      const user = await methods.findUser(-1);
+      const user = await methods.findUserById(-1);
       expect(user).toBeNull();
     });
   });
