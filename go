@@ -40,39 +40,11 @@ function npm_exec {
 function npm_run {
   dc_exec npm run $@
 }
-
-function test {
-  npm_run test
-}
-
-function lint {
-  npm_run lint
-}
-
-function prettier {
-  npm_run prettier
-}
 # End NPM functions
 
 # DB actions
 function npx_run {
-  dc_exec npm $@
-}
-
-function migrate {
-  npm_run migrate
-}
-
-function unmigrate {
-  npm_run unmigrate
-}
-
-function seed {
-  npm_run seed
-}
-
-function unseed {
-  npm_run unseed
+  dc_exec npx $@
 }
 
 function create-migration {
@@ -95,13 +67,13 @@ case "$1" in
     case "$2" in
       run) runDb
       ;;
-      migrate) migrate
+      migrate) npm_run migrate
       ;;
-      unmigrate) unmigrate
+      unmigrate) npm_run unmigrate
       ;;
-      seed) seed
+      seed) npm_run seed
       ;;
-      unseed) unseed
+      unseed) npm_run unseed
       ;;
       create-migration) create-migration $3
       ;;
@@ -111,11 +83,11 @@ case "$1" in
       ;;
     esac
   ;;
-  lint) lint
+  lint) npm_run lint
   ;;
   npm) npm ${@:2}
   ;;
-  prettier) prettier
+  prettier) npm_run prettier
   ;;
   shell) shell
   ;;
@@ -123,7 +95,9 @@ case "$1" in
   ;;
   stop) stop
   ;;
-  test) test
+  test) npm_run test
+  ;;
+  coverage) npm_run coverage
   ;;
   *)
     echo "Unable to execute $1"
