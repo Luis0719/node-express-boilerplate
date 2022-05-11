@@ -1,4 +1,4 @@
-const logger = require("../logger");
+const errorHandler = require("./errorHandler");
 
 /**
  * @param  {Promise} promise
@@ -25,8 +25,7 @@ function requestTo(handler) {
       const result = await handler(req, res, next);
       return result;
     } catch (err) {
-      logger.error(err.message);
-      logger.error(err.stack);
+      errorHandler.handle(err);
       return next(err);
     }
   };

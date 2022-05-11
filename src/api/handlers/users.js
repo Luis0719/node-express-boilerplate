@@ -2,7 +2,7 @@ const methods = require("../methods/users");
 const httpErrors = require("http-errors");
 const { to } = require("../../common/helpers/asyncUtils");
 const httpResponse = require("../../common/helpers/httpResponse");
-const logger = require("../../common/logger");
+const errorHandler = require("../../common/helpers/errorHandler");
 
 /**
  * @param  {Express.Request} req
@@ -15,7 +15,7 @@ async function list(req, res, next) {
   const [err, result] = await to(methods.list(options));
 
   if (err) {
-    logger.error(err);
+    errorHandler.handle(err);
     return next(new httpErrors.InternalServerError());
   }
 
@@ -37,7 +37,7 @@ async function register(req, res, next) {
   const [err, result] = await to(methods.register(options));
 
   if (err) {
-    logger.error(err);
+    errorHandler.handle(err);
     return next(new httpErrors.InternalServerError());
   }
 
@@ -59,7 +59,7 @@ async function findById(req, res, next) {
   const [err, result] = await to(methods.findById(req.params.id));
 
   if (err) {
-    logger.error(err);
+    errorHandler.handle(err);
     return next(new httpErrors.InternalServerError());
   }
 
@@ -88,7 +88,7 @@ async function setPassword(req, res, next) {
   );
 
   if (err) {
-    logger.error(err);
+    errorHandler.handle(err);
     return next(new httpErrors.InternalServerError());
   }
 
@@ -111,7 +111,7 @@ async function destroy(req, res, next) {
   const [err, result] = await to(methods.destroy(req.params.id));
 
   if (err) {
-    logger.error(err);
+    errorHandler.handle(err);
     return next(new httpErrors.InternalServerError());
   }
 

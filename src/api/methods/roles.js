@@ -27,7 +27,11 @@ function buildListOptions(options) {
  */
 async function list(options) {
   const queryOptions = buildListOptions(options);
-  const roles = await Roles.findAll(queryOptions);
+  const [error, roles] = await to(Roles.findAll(queryOptions));
+
+  if (error) {
+    return sequelizeUtils.toStatusError(error);
+  }
 
   return new Status(Status.OK, roles);
 }
@@ -37,6 +41,7 @@ async function list(options) {
  * @return {Status}
  */
 async function store(params) {
+  // TODO create both in same transaction
   const [errorRole, role] = await to(Roles.create(params));
   if (errorRole) {
     return sequelizeUtils.toStatusError(errorRole);
@@ -61,7 +66,10 @@ async function store(params) {
  * @return {Status}
  */
 async function update(id, params) {
-  const role = await Roles.findByPk(id);
+  const [errorRole, role] = await to(Roles.findByPk(id));
+  if (errorRole) {
+    return sequelizeUtils.toStatusError(errorRole);
+  }
 
   if (!role) {
     return new Status(Status.NOT_FOUND);
@@ -96,7 +104,10 @@ async function update(id, params) {
       role_id: role.id,
       action_id: action,
     }));
-    await RoleActions.bulkCreate(newRoleActions);
+    const [roleActionsError] = await to(RoleActions.bulkCreate(newRoleActions));
+    if (roleActionsError) {
+      return sequelizeUtils.toStatusError(roleActionsError);
+    }
   }
 
   return new Status(Status.OK, role);

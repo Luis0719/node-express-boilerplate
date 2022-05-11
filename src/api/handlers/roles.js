@@ -1,8 +1,8 @@
 const methods = require("../methods/roles");
 const httpErrors = require("http-errors");
+const errorHandler = require("../../common/helpers/errorHandler");
 const { to } = require("../../common/helpers/asyncUtils");
 const httpResponse = require("../../common/helpers/httpResponse");
-const logger = require("../../common/logger");
 
 /**
  * @param  {Express.Request} req
@@ -14,7 +14,7 @@ async function list(req, res, next) {
   const [err, result] = await to(methods.list(options));
 
   if (err) {
-    logger.error(err);
+    errorHandler.handle(err);
     return next(new httpErrors.InternalServerError());
   }
 
@@ -35,7 +35,7 @@ async function store(req, res, next) {
   const [err, result] = await to(methods.store(options));
 
   if (err) {
-    logger.error(err);
+    errorHandler.handle(err);
     return next(new httpErrors.InternalServerError());
   }
 
@@ -56,7 +56,7 @@ async function update(req, res, next) {
   const [err, result] = await to(methods.update(req.params.id, params));
 
   if (err) {
-    logger.error(err);
+    errorHandler.handle(err);
     return next(new httpErrors.InternalServerError());
   }
 
