@@ -84,9 +84,7 @@ async function findById(id) {
  * @return {Status}
  */
 async function setPassword(id, oldPassword, newPassword) {
-  const user = await Users.findByPk(id, {
-    // attributes: ["id", "password"],
-  });
+  const user = await Users.findByPk(id);
 
   if (!user) {
     return new Status(Status.NOT_FOUND);

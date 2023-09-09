@@ -41,7 +41,6 @@ async function list(options) {
  * @return {Status}
  */
 async function store(params) {
-  // TODO create both in same transaction
   const [errorRole, role] = await to(Roles.create(params));
   if (errorRole) {
     return sequelizeUtils.toStatusError(errorRole);

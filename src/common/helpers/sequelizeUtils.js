@@ -1,5 +1,5 @@
 const Status = require("./status");
-const logger = require("../../common/logger");
+const errorHandler = require("../../common/helpers/errorHandler");
 
 const errorToStatusMap = {
   SequelizeUniqueConstraintError: Status.BAD_REQUEST,
@@ -10,8 +10,8 @@ const errorToStatusMap = {
  * @return {Status}
  */
 function toStatusError(error) {
-  if (!errorToStatusMap[error.name]) {
-    logger.error("Could not find " + error.name);
+  if (!error.name && !errorToStatusMap[error.name]) {
+    errorHandler(error);
     return new Status(Status.INTERNAL_ERROR);
   }
 
